@@ -81,24 +81,24 @@ public class User {
         return conn;
     }
     
-    public void saveData(){
+    // public void saveData(){
         
-        String sql = "INSERT INTO users(firstName, lastName, username, email, password) VALUES(?,?,?,?,?)";
-        try (Connection conn = connect();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    //     String sql = "INSERT INTO users(firstName, lastName, username, email, password) VALUES(?,?,?,?,?)";
+    //     try (Connection conn = connect();
+    //      PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-        pstmt.setString(1, firstName);
-        pstmt.setString(2, lastName);
-        pstmt.setString(3, username);
-        pstmt.setString(4, email);
-        pstmt.setString(5, password);
-        pstmt.executeUpdate();
-        System.out.println("User inserted!");
+    //     pstmt.setString(1, firstName);
+    //     pstmt.setString(2, lastName);
+    //     pstmt.setString(3, username);
+    //     pstmt.setString(4, email);
+    //     pstmt.setString(5, password);
+    //     pstmt.executeUpdate();
+    //     System.out.println("User inserted!");
 
-    } catch (SQLException e) {
-        System.out.println(e.getMessage());
-    }
-    }
+    // } catch (SQLException e) {
+    //     System.out.println(e.getMessage());
+    // }
+    // }
 
     //setter and getter methods
     public void setId(int id){
