@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Step",
+            "request": "launch",
+            "mainClass": "Step",
+            "projectName": "testtest_eee6b856"
+        },
+        {
+            "type": "java",
+            "name": "JavaFX App",
+            "request": "launch",
+            "mainClass": "${fileBasenameNoExtension}",
+            "vmArgs": "--module-path /home/isaac/Downloads/javafx/openjfx-24.0.2_linux-x64_bin-sdk/javafx-sdk-24.0.2/lib/lib --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}
