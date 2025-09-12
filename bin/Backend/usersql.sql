@@ -17,4 +17,5 @@
 -- WHERE username = "natiusername";
 
 -- DROP TABLE USERS;
-SELECT * FROM USERS;
+-- SELECT * FROM users WHERE username = yoniusername AND password = yonipasswrd;
+-- SELECT * FROM USERS;
