@@ -1,1 +1,22 @@
 java -cp ".:sqlite-jdbc-3.50.3.0.jar" Main.java
+
+javac --module-path "/home/isaac/Downloads/javafx-sdk-24.0.2/lib"       --add-modules javafx.controls       -d out src/View/Login.java src/Backend/Test.java
+
+java --module-path "/home/isaac/Downloads/javafx-sdk-24.0.2/lib"      --add-modules javafx.controls      -cp out:src/resources Backend.Test
+
+javac --module-path "/home/isaac/Downloads/javafx-sdk-24.0.2/lib" --add-modules javafx.controls -d out src/View/Login.java src/Backend/User.java src/Backend/Comment.java src/Backend/Post.java
+ src/Backend/Test.java
+
+ javac --module-path "/home/isaac/Downloads/javafx-sdk-24.0.2/lib"       --add-modules javafx.controls       -d out src/View/Login.java src/Backend/User.java src/Backend/Comment.java src/Backend/Post.jav
+a src/Backend/Test.java
+
+
+new
+javac --module-path "/home/isaac/Downloads/javafx-sdk-24.0.2/lib"       --add-modules javafx.controls       -d out src/View/Login.java src/Backend/User.java src/Backend/Comment.java src/Backend/Post.java src/Backend/Test.java
+
+java --module-path "/home/isaac/Downloads/javafx-sdk-24.0.2/lib"      --add-modules javafx.controls      -cp out:sqlite-jdbc.jar:src/Backend src/resources Backend.Test
+
+
+new
+javac --module-path "/home/isaac/Downloads/javafx-sdk-24.0.2/lib"       --add-modules javafx.controls       -d out src/View/Login.java src/Backend/*.java src/Controller/*.java src/View/*.java
+java -cp "/home/isaac/Desktop/MIni-Socialmedia/Mini-Socialmedia/src/resources/sqlite-jdbc-3.50.3.0.jar" --module-path "/home/isaac/Downloads/javafx-sdk-24.0.2/lib"      --add-modules javafx.controls src/Backend/Test.java

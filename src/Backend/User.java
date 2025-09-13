@@ -15,15 +15,15 @@ public class User {
     private ArrayList<Post> likes;
     private ArrayList<User> friends;
 
-    // public User(String fistName, String lastName, String username,  String email, String password){
+    public User(String fistName, String lastName, String username,  String email, String password){
     
-    //     this.firstName = fistName;
-    //     this.lastName = lastName;
-    //     this.username = username;
-    //     this.email = email;
-    //     this.password = password;
+        this.firstName = fistName;
+        this.lastName = lastName;
+        this.username = username;
+        this.email = email;
+        this.password = password;
         
-    // }
+    }
 
     // public static void showDatabase(){
     //     String sql = "SELECT * FROM users";

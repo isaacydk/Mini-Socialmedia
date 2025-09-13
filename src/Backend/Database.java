@@ -8,6 +8,13 @@ import java.sql.Statement;
 public class Database {
     private Statement stmt;
 
+    // public Database(){
+        
+    // }
+    // public Database(Database db){
+    //     this.stmt = db.getStatement();
+    // }
+
     public Connection connect() {
         Connection conn = null;
         try {

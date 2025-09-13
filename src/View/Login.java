@@ -1,65 +1,203 @@
 package View;
 
-
-
-//i use this to check the database, change it if you finish yours.
+import Backend.User;
+import Controller.CreateUser;
+import Backend.Database;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Login extends Application {
+    private Stage primaryStage;
+    private Scene scene1; // Signup scene
+    private Scene scene2; // Login scene
+    private static final double wLabel = 100;
+
+    // Store user values in variables (in memory)
+    private String firstName;
+    private String lastName;
+    private String username;
+    private String email;
+    private String password;
+
+    // Input fields for signup
+    private TextField tFirstName, tLastName, tUsername, tEmail;
+    private PasswordField tPassword, tCpassword;
+
+    // Input fields for login
+    private TextField tLoginUsername;
+    private PasswordField tLoginPassword;
 
     @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Login");
+    public void start(Stage stage) {
+        primaryStage = stage;
+        scene1 = new Scene(signupPage(), 800, 700);
+        scene2 = new Scene(loginPage(), 800, 700);
 
-        // Root layout
-        BorderPane root = new BorderPane();
-        root.setPadding(new Insets(40, 20, 40, 20));
-
-        // Title
-        Label title = new Label("Login");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 32));
-        title.setStyle("-fx-text-fill: #1E90FF;"); // Blue
-        BorderPane.setAlignment(title, Pos.CENTER);
-        root.setTop(title);
-
-        // Center form
-        VBox formBox = new VBox(15);
-        formBox.setPadding(new Insets(30, 200, 30, 200));
-        formBox.setAlignment(Pos.CENTER);
-
-        TextField username = new TextField();
-        username.setPromptText("Username");
-
-        PasswordField password = new PasswordField();
-        password.setPromptText("Password");
-
-        Button loginBtn = new Button("Login");
-        loginBtn.setPrefHeight(40);
-        loginBtn.setPrefWidth(200);
-        loginBtn.setStyle("-fx-background-color: #1E90FF; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 20;");
-
-        formBox.getChildren().addAll(username, password, loginBtn);
-        root.setCenter(formBox);
-
-        // Bottom link
-        Hyperlink createAcc = new Hyperlink("Don't have an account? Create new one");
-        createAcc.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        BorderPane.setAlignment(createAcc, Pos.CENTER);
-        root.setBottom(createAcc);
-
-        // Scene
-        Scene scene = new Scene(root, 600, 400);
-        primaryStage.setScene(scene);
+        primaryStage.setTitle("Mini Social Media - Login/Signup");
+        primaryStage.setScene(scene1);
         primaryStage.show();
     }
 
+    // SIGNUP PAGE
+    private Region signupPage() {
+        tFirstName = new TextField();
+        tLastName = new TextField();
+        tUsername = new TextField();
+        tEmail = new TextField();
+        tPassword = new PasswordField();
+        tCpassword = new PasswordField();
+
+        VBox total = new VBox(
+            sHead("Sign Up"),
+            getRow("First Name", tFirstName),
+            getRow("Last Name", tLastName),
+            getRow("Username", tUsername),
+            getRow("Email", tEmail),
+            getRow("Password", tPassword),
+            getRow("Confirm Password", tCpassword),
+            getSignupButton(),
+
+            
+
+            getSwitchToLogin()
+        );
+        total.setSpacing(10);
+        total.setAlignment(Pos.CENTER_LEFT);
+        total.setPadding(new Insets(20));
+
+        // ✅ Add CSS here
+        total.getStylesheets().add(getClass().getResource("/css/Login.css").toExternalForm());
+
+        return total;
+    }
+
+    private Node getSignupButton() {
+        Button button = new Button("Sign up");
+        button.setOnAction(evt -> handleSignup());
+        HBox hButton = new HBox(button);
+        hButton.setAlignment(Pos.CENTER);
+        return hButton;
+    }
+
+    private Node getSwitchToLogin() {
+        Label logIn = new Label("Already have an account? ");
+        Button bLog = new Button("Log in");
+        bLog.setOnAction(evt -> primaryStage.setScene(scene2));
+        HBox log = new HBox(logIn, bLog);
+        log.setAlignment(Pos.CENTER);
+        return log;
+    }
+
+    private void handleSignup() {
+        if (!tPassword.getText().equals(tCpassword.getText())) {
+            System.out.println("❌ Passwords do not match!");
+            return;
+        }
+
+        // Store values in variables
+        firstName = tFirstName.getText();
+        lastName = tLastName.getText();
+        username = tUsername.getText();
+        email = tEmail.getText();
+        password = tPassword.getText();
+
+        // System.out.println("✅ User signed up successfully:");
+        // System.out.println("First Name: " + firstName);
+        // System.out.println("Last Name: " + lastName);
+        // System.out.println("Username: " + username);
+        // System.out.println("Email: " + email);
+
+        User u = new User(firstName, lastName, username, email, password);
+        Database db = new Database();
+        CreateUser cu = new CreateUser(u, db);
+        cu.create();
+
+        // Switch to login page
+        primaryStage.setScene(scene2);
+    }
+
+    // LOGIN PAGE
+    private Region loginPage() {
+        tLoginUsername = new TextField();
+        tLoginPassword = new PasswordField();
+
+        VBox total = new VBox(
+            sHead("Log In"),
+            getRow("Username", tLoginUsername),
+            getRow("Password", tLoginPassword),
+            getLoginButton(),
+            getSwitchToSignup()
+        );
+        total.setSpacing(10);
+        total.setAlignment(Pos.CENTER_LEFT);
+        total.setPadding(new Insets(20));
+
+        // ✅ Add CSS here too
+        total.getStylesheets().add(getClass().getResource("/css/Login.css").toExternalForm());
+
+        return total;
+    }
+
+    private Node getLoginButton() {
+        Button button = new Button("Log in");
+        button.setOnAction(evt -> handleLogin());
+        HBox hButton = new HBox(button);
+        hButton.setAlignment(Pos.CENTER);
+        return hButton;
+    }
+
+    private Node getSwitchToSignup() {
+        Label signUp = new Label("Don't have an account? ");
+        Button bSign = new Button("Sign up");
+        bSign.setOnAction(evt -> primaryStage.setScene(scene1));
+        HBox sign = new HBox(signUp, bSign);
+        sign.setAlignment(Pos.CENTER);
+        return sign;
+    }
+
+    private void handleLogin() {
+        String inputUser = tLoginUsername.getText();
+        String inputPass = tLoginPassword.getText();
+
+        if (inputUser.equals(username) && inputPass.equals(password)) {
+            System.out.println("✅ Login successful! Welcome " + firstName + " " + lastName);
+        } else {
+            System.out.println("❌ Invalid username or password!");
+        }
+    }
+
+    // Helper methods
+    private Region sHead(String title) {
+        Label header = new Label(title);
+        header.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        HBox head = new HBox(header);
+        head.setAlignment(Pos.CENTER);
+        return head;
+    }
+
+    private Node getRow(String labelText, TextField field) {
+        Label label = new Label(labelText);
+        label.setMinWidth(wLabel);
+        label.setAlignment(Pos.CENTER_RIGHT);
+
+
+        HBox row = new HBox(label, field);
+        row.setSpacing(10);
+        row.setAlignment(Pos.CENTER);
+        return row;
+    }
+
+   
 }

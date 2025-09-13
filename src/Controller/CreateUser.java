@@ -14,14 +14,14 @@ public class CreateUser {
 
     public CreateUser(User u, Database db){
         this.u = u;
-        this.db= db;
+        this.db = db;
     }
 
     public void create(){
 
         String sql = "INSERT INTO users(firstName, lastName, username, email, password) VALUES(?,?,?,?,?)";
         try (Connection conn = db.connect();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
         pstmt.setString(1, u.getFirstName());
         pstmt.setString(2, u.getLastName());

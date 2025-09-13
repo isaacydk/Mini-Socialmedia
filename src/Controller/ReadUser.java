@@ -20,7 +20,7 @@ public class ReadUser {
             loggedIn = rs.next();
 
             if (loggedIn) {
-                user = new User();
+                // user = new User();
                 user.setId(rs.getInt("id"));
                 user.setFirstName(rs.getString("firstName"));
                 user.setLastName(rs.getString("lastName"));
