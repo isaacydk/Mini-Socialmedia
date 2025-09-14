@@ -6,6 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
     private Connection conn;
@@ -82,4 +86,62 @@ public class Database {
         }
     }
 
+
+
+    // ✅ Fetch all posts from the database
+    public List<Post> getAllPosts() {
+        List<Post> posts = new ArrayList<>();
+        String sql = "SELECT id, user_id, content, created_at FROM POSTS ORDER BY created_at DESC";
+
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int userId = rs.getInt("user_id");
+                String content = rs.getString("content");
+                String createdAtStr = rs.getString("created_at");
+                LocalDateTime createdAt = LocalDateTime.parse(createdAtStr, formatter);
+
+                posts.add(new Post(id, userId, content, createdAt));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return posts;
+    }
+
+    // ✅ Like a post (insert only if the user hasn’t liked it already)
+    public boolean likePost(int userId, int postId) {
+        String checkSql = "SELECT COUNT(*) FROM LIKES WHERE user_id = ? AND post_id = ?";
+        String insertSql = "INSERT INTO LIKES(user_id, post_id, created_at) VALUES(?, ?, datetime('now'))";
+
+        try (Connection conn = connect();
+             PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+
+            checkStmt.setInt(1, userId);
+            checkStmt.setInt(2, postId);
+            ResultSet rs = checkStmt.executeQuery();
+
+            if (rs.next() && rs.getInt(1) > 0) {
+                // User already liked this post
+                return false;
+            }
+
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                insertStmt.setInt(1, userId);
+                insertStmt.setInt(2, postId);
+                insertStmt.executeUpdate();
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

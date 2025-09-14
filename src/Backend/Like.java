@@ -2,44 +2,44 @@ package Backend;
 
 import java.time.LocalDateTime;
 
-public class Post {
+public class Like {
     private int id;
+    private int postId;
     private int userId;
-    private String content;
     private LocalDateTime createdAt;
 
     // Constructor
-    public Post(int id, int userId, String content, LocalDateTime createdAt) {
+    public Like(int id, int postId, int userId, LocalDateTime createdAt) {
         this.id = id;
+        this.postId = postId;
         this.userId = userId;
-        this.content = content;
         this.createdAt = createdAt;
     }
 
-    // Overloaded constructor (for inserting new posts)
-    public Post(int userId, String content) {
-        this(-1, userId, content, LocalDateTime.now());
+    // Overloaded constructor (for inserting new likes)
+    public Like(int postId, int userId) {
+        this(-1, postId, userId, LocalDateTime.now());
     }
 
     // Getters and setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
+    public int getPostId() { return postId; }
+    public void setPostId(int postId) { this.postId = postId; }
+
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
-
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     @Override
     public String toString() {
-        return "Post{" +
+        return "Like{" +
                 "id=" + id +
+                ", postId=" + postId +
                 ", userId=" + userId +
-                ", content='" + content + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }
