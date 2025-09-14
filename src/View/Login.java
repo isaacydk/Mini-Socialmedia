@@ -1,5 +1,10 @@
 package View;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import Backend.Database;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -158,16 +163,36 @@ public class Login extends Application {
     }
 
     private void handleLogin() {
-        String inputUser = tLoginUsername.getText();
-        String inputPass = tLoginPassword.getText();
+    String inputUser = tLoginUsername.getText();
+    String inputPass = tLoginPassword.getText();
 
-        if (inputUser.equals(username) && inputPass.equals(password)) {
+    // Database query
+    String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+
+    try (Connection conn = db.connect(); 
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+        pstmt.setString(1, inputUser);
+        pstmt.setString(2, inputPass);
+
+        ResultSet rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            String firstName = rs.getString("firstName");
+            String lastName = rs.getString("lastName");
+
             showAlert(Alert.AlertType.INFORMATION, "Login Success",
                     "Welcome back, " + firstName + " " + lastName + "!");
         } else {
             showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password!");
         }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        showAlert(Alert.AlertType.ERROR, "Database Error", "Could not connect to the database.");
     }
+}
+
 
     // Helper methods
     private Region sHead(String title) {
