@@ -1,18 +1,12 @@
 package View;
 
-import Backend.User;
-import Controller.CreateUser;
 import Backend.Database;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -34,10 +28,13 @@ public class Login extends Application {
     // Input fields for signup
     private TextField tFirstName, tLastName, tUsername, tEmail;
     private PasswordField tPassword, tCpassword;
-
+    
     // Input fields for login
     private TextField tLoginUsername;
     private PasswordField tLoginPassword;
+
+    // Database instance
+    private Database db = new Database();
 
     @Override
     public void start(Stage stage) {
@@ -60,7 +57,7 @@ public class Login extends Application {
         tCpassword = new PasswordField();
 
         VBox total = new VBox(
-            sHead("Sign Up"),
+            sHead("Welcome"),
             getRow("First Name", tFirstName),
             getRow("Last Name", tLastName),
             getRow("Username", tUsername),
@@ -68,16 +65,12 @@ public class Login extends Application {
             getRow("Password", tPassword),
             getRow("Confirm Password", tCpassword),
             getSignupButton(),
-
-            
-
             getSwitchToLogin()
         );
         total.setSpacing(10);
         total.setAlignment(Pos.CENTER_LEFT);
         total.setPadding(new Insets(20));
 
-        // ✅ Add CSS here
         total.getStylesheets().add(getClass().getResource("/css/Login.css").toExternalForm());
 
         return total;
@@ -102,7 +95,7 @@ public class Login extends Application {
 
     private void handleSignup() {
         if (!tPassword.getText().equals(tCpassword.getText())) {
-            System.out.println("❌ Passwords do not match!");
+            showAlert(Alert.AlertType.ERROR, "Signup Error", "Passwords do not match!");
             return;
         }
 
@@ -113,16 +106,14 @@ public class Login extends Application {
         email = tEmail.getText();
         password = tPassword.getText();
 
-        // System.out.println("✅ User signed up successfully:");
-        // System.out.println("First Name: " + firstName);
-        // System.out.println("Last Name: " + lastName);
-        // System.out.println("Username: " + username);
-        // System.out.println("Email: " + email);
+        boolean success = db.insertUser(firstName, lastName, username, email, password);
+        if (!success) {
+            showAlert(Alert.AlertType.ERROR, "Signup Error", "Failed to register user. Try again.");
+            return;
+        }
 
-        User u = new User(firstName, lastName, username, email, password);
-        Database db = new Database();
-        CreateUser cu = new CreateUser(u, db);
-        cu.create();
+        showAlert(Alert.AlertType.INFORMATION, "Signup Success",
+                "User registered successfully!\nWelcome " + firstName + " " + lastName);
 
         // Switch to login page
         primaryStage.setScene(scene2);
@@ -144,7 +135,6 @@ public class Login extends Application {
         total.setAlignment(Pos.CENTER_LEFT);
         total.setPadding(new Insets(20));
 
-        // ✅ Add CSS here too
         total.getStylesheets().add(getClass().getResource("/css/Login.css").toExternalForm());
 
         return total;
@@ -172,9 +162,10 @@ public class Login extends Application {
         String inputPass = tLoginPassword.getText();
 
         if (inputUser.equals(username) && inputPass.equals(password)) {
-            System.out.println("✅ Login successful! Welcome " + firstName + " " + lastName);
+            showAlert(Alert.AlertType.INFORMATION, "Login Success",
+                    "Welcome back, " + firstName + " " + lastName + "!");
         } else {
-            System.out.println("❌ Invalid username or password!");
+            showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password!");
         }
     }
 
@@ -190,14 +181,21 @@ public class Login extends Application {
     private Node getRow(String labelText, TextField field) {
         Label label = new Label(labelText);
         label.setMinWidth(wLabel);
-        label.setAlignment(Pos.CENTER_RIGHT);
-
-
         HBox row = new HBox(label, field);
         row.setSpacing(10);
         row.setAlignment(Pos.CENTER);
         return row;
     }
 
-   
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void main(String[] args) {
+        launch();
+    }
 }
