@@ -2,34 +2,18 @@ package View;
 
 import java.time.LocalTime;
 
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
-
-public class Home extends Application{
-    public static void main(String[] args) {
-        launch(args);
-    }
-    public void start(Stage primaryStage){
-        Scene scene1 = new Scene(mainCondition(primaryStage), 500, 400);
-        ThemeManager.applyTheme(scene1);
-        primaryStage.setScene(scene1);
-        primaryStage.setTitle("Home Page");
-        primaryStage.show();
-    }
-    public VBox mainCondition(Stage stage){
+public class Home {
+    public VBox buildHomeBody(){
         Text t1 = new Text("This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. ");
-        VBox total = new VBox(topBar(stage), displayTextArea(t1.getText()));
+        VBox total = new VBox(displayTextArea(t1.getText()));
         total.setSpacing(10);
         total.setPadding(new Insets(10));
         return total;
@@ -67,55 +51,14 @@ public class Home extends Application{
         bubble.setPadding(new Insets(8));
         bubble.getStyleClass().add("border-one");
 
-        // ✅ Bind wrapping width to bubble's parent width once it’s added
-        bubble.parentProperty().addListener((obs, oldParent, newParent) -> {
-            if (newParent != null) {
+        bubble.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
                 messageText.wrappingWidthProperty()
-                        .bind(((Region)newParent).widthProperty().subtract(40));
+                        .bind(newScene.widthProperty().subtract(60));
             }
         });
 
+
         return bubble;
-    }
-
-
-    private Region topBar(Stage primaryStage){
-        Hyperlink home = new Hyperlink("Home");
-        Hyperlink post = new Hyperlink("Post");
-        Hyperlink account = new Hyperlink("Account");
-
-        home.setOnAction(e -> {
-            Scene homeScene = new Scene(new Home().mainCondition(primaryStage), 500, 400);
-            homeScene.getStylesheets().add(this.getClass().getResource("/Dark-theme.css").toExternalForm());
-            primaryStage.setScene(homeScene);
-        });
-
-        post.setOnAction(e -> {
-            Scene postScene = new Scene(new Post().mainCondition(primaryStage), 500, 400);
-            postScene.getStylesheets().add(this.getClass().getResource("/Dark-theme.css").toExternalForm());
-            primaryStage.setScene(postScene);
-        });
-
-        account.setOnAction(e -> {
-            Scene accountScene = new Scene(new Account().mainCondition(primaryStage), 500, 400);
-            accountScene.getStylesheets().add(this.getClass().getResource("/Dark-theme.css").toExternalForm());
-            primaryStage.setScene(accountScene);
-        });
-
-
-        Circle profileCircle = new Circle(15);
-        profileCircle.getStyleClass().add("circle");
-        
-        Text userInitial = new Text("TU");
-        userInitial.getStyleClass().add("text");
-        
-        StackPane profilePic = new StackPane(profileCircle, userInitial);
-        
-        HBox total = new HBox(profilePic, home, post, account);
-        total.setSpacing(10);
-        total.getStyleClass().add("top-bar");
-        total.setAlignment(Pos.TOP_LEFT);
-
-        return total;
     }
 }
