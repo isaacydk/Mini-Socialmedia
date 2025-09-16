@@ -1,5 +1,6 @@
 package View;
 
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,9 +16,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Account extends Application{
-    public static void main(String[] args) {
-        launch(args);
-    }
+    
     public void start(Stage primaryStage){
         Scene scene1 = new Scene(mainCondition(primaryStage), 500, 400);
         ThemeManager.applyTheme(scene1);
@@ -54,7 +53,7 @@ public class Account extends Application{
         return hbox;
     }
     private HBox bBody(){
-        HBox total = new HBox(bTheme(), bLogout());
+        HBox total = new HBox(bTheme(), bLogout(Stage currentStage));
         total.setAlignment(Pos.CENTER);
         total.setSpacing(20);
         total.setPadding(new Insets(10,0,0,0));
@@ -76,10 +75,25 @@ public class Account extends Application{
     }
 
 
-    private Button bLogout() {
-        Button logout = new Button("Logout");
-        return logout;
-    }
+    private Button bLogout(Stage currentStage) {
+    Button logout = new Button("Logout");
+    logout.setOnAction(e -> {
+        try {
+            // Open login page
+            Login loginApp = new Login(); // Your login class
+            Stage loginStage = new Stage();
+            loginApp.start(loginStage);
+
+            // Close current Home window
+            currentStage.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    });
+    return logout;
+}
+
     
     private VBox names(){
         Text generalName = new Text("Temporary Name");
@@ -101,19 +115,19 @@ public class Account extends Application{
 
         home.setOnAction(e -> {
             Scene homeScene = new Scene(new Home().mainCondition(primaryStage), 500, 400);
-            homeScene.getStylesheets().add(this.getClass().getResource("/Dark-theme.css").toExternalForm());
+            homeScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
             primaryStage.setScene(homeScene);
         });
 
         post.setOnAction(e -> {
             Scene postScene = new Scene(new Post().mainCondition(primaryStage), 500, 400);
-            postScene.getStylesheets().add(this.getClass().getResource("/Dark-theme.css").toExternalForm());
+            postScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
             primaryStage.setScene(postScene);
         });
 
         account.setOnAction(e -> {
             Scene accountScene = new Scene(new Account().mainCondition(primaryStage), 500, 400);
-            accountScene.getStylesheets().add(this.getClass().getResource("/Dark-theme.css").toExternalForm());
+            accountScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
             primaryStage.setScene(accountScene);
         });
 

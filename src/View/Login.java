@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import Backend.Database;
+import Backend.User;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -98,6 +99,8 @@ public class Login extends Application {
         return log;
     }
 
+    // modify it to not sign in if the username, first name, email, and password is empty
+
     private void handleSignup() {
         if (!tPassword.getText().equals(tCpassword.getText())) {
             showAlert(Alert.AlertType.ERROR, "Signup Error", "Passwords do not match!");
@@ -111,7 +114,27 @@ public class Login extends Application {
         email = tEmail.getText();
         password = tPassword.getText();
 
+        if (firstName.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+        showAlert(Alert.AlertType.ERROR, "Signup Error", "Please fill in all required fields!");
+        return;
+        }
+
         boolean success = db.insertUser(firstName, lastName, username, email, password);
+        if (success) {
+            // ✅ Open Home page with user info
+            User newUser = new User(firstName, lastName, username, email, password);
+            Home homeApp = new Home(newUser);
+            Stage homeStage = new Stage();
+            homeApp.start(homeStage);
+
+            // Close login window
+            primaryStage.close();
+
+        }
+           
+         
+
+
         if (!success) {
             showAlert(Alert.AlertType.ERROR, "Signup Error", "Failed to register user. Try again.");
             return;
@@ -180,9 +203,24 @@ public class Login extends Application {
         if (rs.next()) {
             String firstName = rs.getString("firstName");
             String lastName = rs.getString("lastName");
+            String username = rs.getString("username");
+            String email = rs.getString("email");
+            String password = rs.getString("password");
+            User loggedInUser = new User(firstName, lastName, username, email, password);
 
             showAlert(Alert.AlertType.INFORMATION, "Login Success",
                     "Welcome back, " + firstName + " " + lastName + "!");
+
+
+              // ✅ Open Home page
+            Home homeApp = new Home(loggedInUser);
+            Stage homeStage = new Stage();
+            homeApp.start(homeStage);
+
+            // Close login window
+            primaryStage.close();
+           
+
         } else {
             showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password!");
         }

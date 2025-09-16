@@ -16,9 +16,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Post extends Application {
-    public static void main(String[] args) {
-        launch(args);
-    }
+    
     public void start(Stage primaryStage){
         Scene scene = new Scene(mainCondition(primaryStage), 500, 400);
         ThemeManager.applyTheme(scene);
@@ -65,19 +63,19 @@ public class Post extends Application {
 
         home.setOnAction(e -> {
             Scene homeScene = new Scene(new Home().mainCondition(primaryStage), 500, 400);
-            homeScene.getStylesheets().add(this.getClass().getResource("/Dark-theme.css").toExternalForm());
+            homeScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
             primaryStage.setScene(homeScene);
         });
 
         post.setOnAction(e -> {
             Scene postScene = new Scene(new Post().mainCondition(primaryStage), 500, 400);
-            postScene.getStylesheets().add(this.getClass().getResource("/Dark-theme.css").toExternalForm());
+            postScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
             primaryStage.setScene(postScene);
         });
 
         account.setOnAction(e -> {
             Scene accountScene = new Scene(new Account().mainCondition(primaryStage), 500, 400);
-            accountScene.getStylesheets().add(this.getClass().getResource("/Dark-theme.css").toExternalForm());
+            accountScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
             primaryStage.setScene(accountScene);
         });
 

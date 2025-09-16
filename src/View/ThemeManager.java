@@ -8,9 +8,9 @@ public class ThemeManager {
     public static void applyTheme(Scene scene) {
         scene.getStylesheets().clear();
         if (darkMode) {
-            scene.getStylesheets().add(ThemeManager.class.getResource("/Dark-theme.css").toExternalForm());
+            scene.getStylesheets().add(ThemeManager.class.getResource("/css/Dark-theme.css").toExternalForm());
         } else {
-            scene.getStylesheets().add(ThemeManager.class.getResource("/Light-theme.css").toExternalForm());
+            scene.getStylesheets().add(ThemeManager.class.getResource("/css/Light-theme.css").toExternalForm());
         }
     }
 

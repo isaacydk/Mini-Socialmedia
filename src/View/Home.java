@@ -1,6 +1,7 @@
 package View;
 
 import java.time.LocalTime;
+import Backend.User;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -17,9 +18,14 @@ import javafx.stage.Stage;
 
 
 public class Home extends Application{
-    public static void main(String[] args) {
-        launch(args);
+
+    User user; // Current logged-in user
+        public Home() {};
+
+    public Home(User user) {
+        this.user = user; 
     }
+    
     public void start(Stage primaryStage){
         Scene scene1 = new Scene(mainCondition(primaryStage), 500, 400);
         ThemeManager.applyTheme(scene1);
@@ -86,19 +92,19 @@ public class Home extends Application{
 
         home.setOnAction(e -> {
             Scene homeScene = new Scene(new Home().mainCondition(primaryStage), 500, 400);
-            homeScene.getStylesheets().add(this.getClass().getResource("/Dark-theme.css").toExternalForm());
+            homeScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
             primaryStage.setScene(homeScene);
         });
 
         post.setOnAction(e -> {
             Scene postScene = new Scene(new Post().mainCondition(primaryStage), 500, 400);
-            postScene.getStylesheets().add(this.getClass().getResource("/Dark-theme.css").toExternalForm());
+            postScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
             primaryStage.setScene(postScene);
         });
 
         account.setOnAction(e -> {
             Scene accountScene = new Scene(new Account().mainCondition(primaryStage), 500, 400);
-            accountScene.getStylesheets().add(this.getClass().getResource("/Dark-theme.css").toExternalForm());
+            accountScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
             primaryStage.setScene(accountScene);
         });
 
