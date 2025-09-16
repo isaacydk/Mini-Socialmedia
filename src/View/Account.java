@@ -1,11 +1,10 @@
 package View;
 
-import java.time.LocalTime;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -15,8 +14,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-
-public class Home extends Application{
+public class Account extends Application{
     public static void main(String[] args) {
         launch(args);
     }
@@ -24,60 +22,77 @@ public class Home extends Application{
         Scene scene1 = new Scene(mainCondition(primaryStage), 500, 400);
         ThemeManager.applyTheme(scene1);
         primaryStage.setScene(scene1);
-        primaryStage.setTitle("Home Page");
+        primaryStage.setTitle("Account Manager");
         primaryStage.show();
     }
-    public VBox mainCondition(Stage stage){
-        Text t1 = new Text("This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. ");
-        VBox total = new VBox(topBar(stage), displayTextArea(t1.getText()));
+    public Region mainCondition(Stage stage){
+        VBox total = new VBox(topBar(stage), body());
         total.setSpacing(10);
-        total.setPadding(new Insets(10));
+        total.setPadding(new Insets(5));
+
         return total;
     }
-    
-    private Region displayTextArea(String text) {
-        Text messageText = new Text(text);
-        messageText.getStyleClass().add("message-text");
+    private VBox body(){
+        VBox total = new VBox(userProfile(),bBody());
+        total.setAlignment(Pos.CENTER);
+        return total;
+    }
+    private HBox userProfile() {
+        Circle profileCircle = new Circle(15);
+        profileCircle.getStyleClass().add("circle");
 
-        Hyperlink likeLink = new Hyperlink("👍");
-        likeLink.getStyleClass().add("links-one");
-        Hyperlink dislikeLink = new Hyperlink("👎");
-        dislikeLink.getStyleClass().add("links-one");
+        Text userInitial = new Text("TN");
+        userInitial.getStyleClass().add("text");
+        
+        StackPane profilePic = new StackPane(profileCircle, userInitial);
+        
+        HBox hbox = new HBox(profilePic, names());
+        hbox.setSpacing(10);
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        hbox.setPadding(new Insets(25,5,5,50));
 
-        HBox leftBox = new HBox(8, likeLink, dislikeLink);
-        leftBox.setAlignment(Pos.CENTER_LEFT);
+        return hbox;
+    }
+    private HBox bBody(){
+        HBox total = new HBox(bTheme(), bLogout());
+        total.setAlignment(Pos.CENTER);
+        total.setSpacing(20);
+        total.setPadding(new Insets(10,0,0,0));
+        
+        return total;
+    }
+    //undecided
+    private Button bTheme() {
+        Button theme = new Button("Theme");
 
-        Text userName = new Text("TempUser");
-        userName.getStyleClass().add("text-one");
-
-        String time = LocalTime.now().withNano(0).toString();
-        Text timeText = new Text(time);
-        timeText.getStyleClass().add("time-one");
-
-        HBox rightBox = new HBox(timeText);
-        rightBox.setAlignment(Pos.CENTER_RIGHT);
-
-        HBox bottomBar = new HBox(leftBox, userName, rightBox);
-        bottomBar.setSpacing(10);
-        bottomBar.setAlignment(Pos.CENTER_RIGHT);
-
-        // Bubble container
-        VBox bubble = new VBox(messageText, bottomBar);
-        bubble.setSpacing(5);
-        bubble.setPadding(new Insets(8));
-        bubble.getStyleClass().add("border-one");
-
-        // ✅ Bind wrapping width to bubble's parent width once it’s added
-        bubble.parentProperty().addListener((obs, oldParent, newParent) -> {
-            if (newParent != null) {
-                messageText.wrappingWidthProperty()
-                        .bind(((Region)newParent).widthProperty().subtract(40));
+        theme.setOnAction(e -> {
+            Scene scene = theme.getScene(); // get the current scene
+            if (scene != null) {
+                ThemeManager.toggleTheme(scene);
             }
         });
 
-        return bubble;
+        return theme;
     }
 
+
+    private Button bLogout() {
+        Button logout = new Button("Logout");
+        return logout;
+    }
+    
+    private VBox names(){
+        Text generalName = new Text("Temporary Name");
+        generalName.getStyleClass().add("small");
+
+        Text userName = new Text("Tempo");
+        userName.getStyleClass().add("large");
+        
+        VBox total = new VBox(userName, generalName);
+        return total;
+    }
+
+    //SIDE/TOP PANEL
 
     private Region topBar(Stage primaryStage){
         Hyperlink home = new Hyperlink("Home");
@@ -118,4 +133,5 @@ public class Home extends Application{
 
         return total;
     }
+    
 }
