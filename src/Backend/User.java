@@ -15,6 +15,7 @@ public class User {
     private ArrayList<Post> likes;
     private ArrayList<User> friends;
 
+    public User (){}
     public User(String fistName, String lastName, String username,  String email, String password){
     
         this.firstName = fistName;

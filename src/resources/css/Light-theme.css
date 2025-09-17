@@ -1,3 +1,7 @@
+.root{ 
+    -fx-background-color: #5a5959; 
+    -fx-font-family: 'Arial';
+}
 .top-bar {
     -fx-border-color: transparent transparent #6e6a6a transparent;
     -fx-border-width: 0 0 2px 0;
@@ -52,10 +56,30 @@
     -fx-text-fill: #145a32;
     -fx-prompt-text-fill: #81c784;
 }
+/* .button{
+    -fx-background-radius: 5px;
+    -fx-background-color: #4caf50;
+    -fx-border-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #ffffff;
+} */
 .hyperlink {
     -fx-underline: false;
     -fx-focus-color: transparent;  /* Removes blue outline on focus */
     -fx-faint-focus-color: transparent; /* Removes faint blue shadow */
+}
+.post-area {
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #218c5a;
+    -fx-border-width: 2px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #000000;
+    -fx-prompt-text-fill: #888888; /* Lighter gray for prompt text */
+    -fx-background-color: transparent; /* Light background for text area */
+}
+.text-area {
+    -fx-border-radius: 30px;
 }
 .border-two {
     -fx-background-radius: 10px;
@@ -86,7 +110,12 @@
     -fx-background-color: transparent;
     -fx-background-insets: 0;
 }
-
+.scroll-pane{
+    -fx-background-color: transparent;
+}
+.viewport{
+    -fx-background-color: transparent;
+}
 /* optional: prompt text color and main text color */
 .temporary .text {
     -fx-fill: #00fff2;

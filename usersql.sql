@@ -8,7 +8,7 @@
 --       );
 
 -- INSERT INTO users (firstName, lastName, username, email, password)
--- VALUES ("Isaac", "Dereje", "yisusername", "yis@gmail.com", "yispasswrd");
+-- VALUES ("Isaac", "Dereje", "yisusername", "yis@gmail.com", "yispass");
 
 -- INSERT INTO users (firstName, username, email, password)
 -- VALUES ("yoni","yoniusername", "yoni@gmail.com", "yonipasswrd");
@@ -16,7 +16,7 @@
 -- DELETE FROM USERS
 -- WHERE username = "natiusername";
 
--- DROP TABLE USERS;
+-- DROP TABLE POSTS;
 -- SELECT * FROM users WHERE username = yoniusername AND password = yonipasswrd;
 
 

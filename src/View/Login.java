@@ -1,15 +1,18 @@
 package View;
 
+import View.MainApp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import Backend.Database;
+import Backend.User;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -82,21 +85,25 @@ public class Login extends Application {
     }
 
     private Node getSignupButton() {
-        Button button = new Button("Sign up");
-        button.setOnAction(evt -> handleSignup());
-        HBox hButton = new HBox(button);
+        Button Butonabc = new Button("Sign up");
+        Butonabc.getStyleClass().add("Butonabc");
+        Butonabc.setOnAction(evt -> handleSignup());
+        HBox hButton = new HBox(Butonabc);
         hButton.setAlignment(Pos.CENTER);
         return hButton;
     }
 
     private Node getSwitchToLogin() {
         Label logIn = new Label("Already have an account? ");
-        Button bLog = new Button("Log in");
-        bLog.setOnAction(evt -> primaryStage.setScene(scene2));
-        HBox log = new HBox(logIn, bLog);
+        Hyperlink hyperlinkabc = new Hyperlink("Log in");
+        hyperlinkabc.getStyleClass().add("hyperlinkabc");
+        hyperlinkabc.setOnAction(evt -> primaryStage.setScene(scene2));
+        HBox log = new HBox(logIn, hyperlinkabc);
         log.setAlignment(Pos.CENTER);
         return log;
     }
+
+    // modify it to not sign in if the username, first name, email, and password is empty
 
     private void handleSignup() {
         if (!tPassword.getText().equals(tCpassword.getText())) {
@@ -111,7 +118,53 @@ public class Login extends Application {
         email = tEmail.getText();
         password = tPassword.getText();
 
+        if (firstName.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+        showAlert(Alert.AlertType.ERROR, "Signup Error", "Please fill in all required fields!");
+        return;
+        }
+
+
         boolean success = db.insertUser(firstName, lastName, username, email, password);
+        if (success) {
+            // ✅ Open Home page with user info
+
+            String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+
+    try (Connection conn = db.connect();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+        pstmt.setString(1, username);
+        pstmt.setString(2, password);
+
+        ResultSet rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            // ✅ Build User object with ID and other fields
+            User newUser = new User();
+            newUser.setId(rs.getInt("id"));
+            newUser.setFirstName(rs.getString("firstName"));
+            newUser.setLastName(rs.getString("lastName"));
+            newUser.setUsername(rs.getString("username"));
+            newUser.setEmail(rs.getString("email"));
+            newUser.setPassword(rs.getString("password")); 
+
+            
+
+            MainApp homeApp = new MainApp(newUser);
+            Stage homeStage = new Stage();
+            homeApp.start(homeStage);
+
+            // Close login window
+            primaryStage.close();
+
+        }
+    }
+    catch (SQLException e) {
+        e.printStackTrace();
+        showAlert(Alert.AlertType.ERROR, "Database Error", "Could not connect to the database.");
+    }
+           
+
         if (!success) {
             showAlert(Alert.AlertType.ERROR, "Signup Error", "Failed to register user. Try again.");
             return;
@@ -122,7 +175,9 @@ public class Login extends Application {
 
         // Switch to login page
         primaryStage.setScene(scene2);
+    
     }
+}
 
     // LOGIN PAGE
     private Region loginPage() {
@@ -146,58 +201,76 @@ public class Login extends Application {
     }
 
     private Node getLoginButton() {
-        Button button = new Button("Log in");
-        button.setOnAction(evt -> handleLogin());
-        HBox hButton = new HBox(button);
+        Button Butonabc = new Button("Log in");
+        Butonabc.getStyleClass().add("Butonabc");
+        Butonabc.setOnAction(evt -> handleLogin());
+        HBox hButton = new HBox(Butonabc);
         hButton.setAlignment(Pos.CENTER);
         return hButton;
     }
 
     private Node getSwitchToSignup() {
         Label signUp = new Label("Don't have an account? ");
-        Button bSign = new Button("Sign up");
-        bSign.setOnAction(evt -> primaryStage.setScene(scene1));
-        HBox sign = new HBox(signUp, bSign);
+        Hyperlink hyperlinkabc = new Hyperlink("Sign up");
+        hyperlinkabc.getStyleClass().add("hyperlinkabc");
+        hyperlinkabc.setOnAction(evt -> primaryStage.setScene(scene1));
+        HBox sign = new HBox(signUp, hyperlinkabc);
         sign.setAlignment(Pos.CENTER);
         return sign;
     }
 
     private void handleLogin() {
-    String inputUser = tLoginUsername.getText();
-    String inputPass = tLoginPassword.getText();
+        String inputUser = tLoginUsername.getText();
+        String inputPass = tLoginPassword.getText();
 
-    // Database query
-    String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
 
-    try (Connection conn = db.connect(); 
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = db.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-        pstmt.setString(1, inputUser);
-        pstmt.setString(2, inputPass);
+            pstmt.setString(1, inputUser);
+            pstmt.setString(2, inputPass);
 
-        ResultSet rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
 
-        if (rs.next()) {
-            String firstName = rs.getString("firstName");
-            String lastName = rs.getString("lastName");
+            if (rs.next()) {
+                // ✅ Build User object with ID and other fields
+                User loggedInUser = new User();
+                loggedInUser.setId(rs.getInt("id"));
+                loggedInUser.setFirstName(rs.getString("firstName"));
+                loggedInUser.setLastName(rs.getString("lastName"));
+                loggedInUser.setUsername(rs.getString("username"));
+                loggedInUser.setEmail(rs.getString("email"));
+                loggedInUser.setPassword(rs.getString("password")); // if you store it
 
-            showAlert(Alert.AlertType.INFORMATION, "Login Success",
-                    "Welcome back, " + firstName + " " + lastName + "!");
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password!");
+                showAlert(Alert.AlertType.INFORMATION, "Login Success",
+                        "Welcome back, " + loggedInUser.getFirstName() + " " + loggedInUser.getLastName() + "!");
+
+                // ✅ Pass user into Home
+                MainApp homeApp = new MainApp(loggedInUser);
+                Stage homeStage = new Stage();
+                homeApp.start(homeStage);
+                // openHome(loggedInUser);
+
+                primaryStage.close();
+
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password!");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Could not connect to the database.");
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        showAlert(Alert.AlertType.ERROR, "Database Error", "Could not connect to the database.");
     }
-}
+
 
 
     // Helper methods
     private Region sHead(String title) {
         Label header = new Label(title);
-        header.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        // header.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        header.getStyleClass().add("header");
         HBox head = new HBox(header);
         head.setAlignment(Pos.CENTER);
         return head;
@@ -222,5 +295,10 @@ public class Login extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public Parent mainCondition(Stage stage) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'mainCondition'");
     }
 }

@@ -1,5 +1,12 @@
 package View;
 
+import java.time.LocalTime;
+import Backend.User;
+import java.util.List;
+import Backend.Post;
+import Backend.Database; 
+
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -11,6 +18,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Account {
+    private User user; // Current logged-in user
+
+    public Account(User user) {
+        this.user = user;
+    }
+
     public VBox buildAccountBody() {
         VBox total = new VBox(userProfile(), bBody());
         total.setAlignment(Pos.CENTER);
@@ -22,24 +35,32 @@ public class Account {
         Circle profileCircle = new Circle(15);
         profileCircle.getStyleClass().add("circle");
 
-        Text userInitial = new Text("TN");
+        String initials = getUserInitials();
+        Text userInitial = new Text(initials);
         userInitial.getStyleClass().add("text");
 
         StackPane profilePic = new StackPane(profileCircle, userInitial);
 
-        Text generalName = new Text("Temporary Name");
-        generalName.getStyleClass().add("small");
-        Text userName = new Text("Tempo");
-        userName.getStyleClass().add("large");
-
-        VBox names = new VBox(userName, generalName);
-
-        HBox hbox = new HBox(profilePic, names);
+        HBox hbox = new HBox(profilePic, names());
         hbox.setSpacing(10);
         hbox.setAlignment(Pos.CENTER_LEFT);
         hbox.setPadding(new Insets(25, 5, 5, 50));
 
         return hbox;
+    }
+    private VBox names() {
+        // Use actual user details
+        String fullName = (user != null) ? user.getFirstName() + " " + user.getLastName() : "Guest User";
+        String username = (user != null) ? "@" + user.getUsername() : "@guest";
+
+        Text userName = new Text(username);
+        userName.getStyleClass().add("large");
+
+        Text generalName = new Text(fullName);
+        generalName.getStyleClass().add("small");
+
+        VBox total = new VBox(userName, generalName);
+        return total;
     }
 
     private HBox bBody() {
@@ -64,5 +85,13 @@ public class Account {
         box.setPadding(new Insets(10, 0, 0, 0));
 
         return box;
+    }
+    private String getUserInitials() {
+        if (user == null) return "GU"; // Guest User
+        String first = (user.getFirstName() != null && !user.getFirstName().isEmpty())
+                ? user.getFirstName().substring(0, 1).toUpperCase() : "";
+        String last = (user.getLastName() != null && !user.getLastName().isEmpty())
+                ? user.getLastName().substring(0, 1).toUpperCase() : "";
+        return first + last;
     }
 }
