@@ -1,50 +1,33 @@
 package View;
 
+import java.time.LocalTime;
 import Backend.User;
+import java.util.List;
+import Backend.Post;
+import Backend.Database; 
 
-import javafx.application.Application;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class Account extends Application {
-
+public class Account {
     private User user; // Current logged-in user
-
-    public Account() {}
 
     public Account(User user) {
         this.user = user;
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        Scene scene1 = new Scene(mainCondition(primaryStage), 500, 400);
-        ThemeManager.applyTheme(scene1);
-        primaryStage.setScene(scene1);
-        primaryStage.setTitle("Account Manager");
-        primaryStage.show();
-    }
-
-    public Region mainCondition(Stage stage) {
-        VBox total = new VBox(topBar(stage), body());
-        total.setSpacing(10);
-        total.setPadding(new Insets(5));
-        return total;
-    }
-
-    private VBox body() {
+    public VBox buildAccountBody() {
         VBox total = new VBox(userProfile(), bBody());
         total.setAlignment(Pos.CENTER);
+        total.setSpacing(10);
         return total;
     }
 
@@ -52,7 +35,6 @@ public class Account extends Application {
         Circle profileCircle = new Circle(15);
         profileCircle.getStyleClass().add("circle");
 
-        // Generate initials from user
         String initials = getUserInitials();
         Text userInitial = new Text(initials);
         userInitial.getStyleClass().add("text");
@@ -66,43 +48,6 @@ public class Account extends Application {
 
         return hbox;
     }
-
-    private HBox bBody() {
-        HBox total = new HBox(bTheme(), bLogout());
-        total.setAlignment(Pos.CENTER);
-        total.setSpacing(20);
-        total.setPadding(new Insets(10, 0, 0, 0));
-
-        return total;
-    }
-
-    private Button bTheme() {
-        Button theme = new Button("Theme");
-
-        theme.setOnAction(e -> {
-            Scene scene = theme.getScene(); // get the current scene
-            if (scene != null) {
-                ThemeManager.toggleTheme(scene);
-            }
-        });
-
-        return theme;
-    }
-
-    private Button bLogout() {
-        Button logout = new Button("Logout");
-
-        logout.setOnAction(e -> {
-            // Back to login
-            Scene loginScene = new Scene(new Login().mainCondition(new Stage()), 500, 400);
-            loginScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
-            Stage stage = (Stage) logout.getScene().getWindow();
-            stage.setScene(loginScene);
-        });
-
-        return logout;
-    }
-
     private VBox names() {
         // Use actual user details
         String fullName = (user != null) ? user.getFirstName() + " " + user.getLastName() : "Guest User";
@@ -118,47 +63,29 @@ public class Account extends Application {
         return total;
     }
 
-    private Region topBar(Stage primaryStage) {
-        Hyperlink home = new Hyperlink("Home");
-        Hyperlink post = new Hyperlink("Post");
-        Hyperlink account = new Hyperlink("Account");
+    private HBox bBody() {
+        Button themeBtn = new Button("Theme"); // global theme button (can be removed if in top bar)
+        themeBtn.setOnAction(e -> ThemeManager.toggleTheme(themeBtn.getScene()));
+        
+        Button logoutBtn = new Button("Logout");
+        logoutBtn.setOnAction(e -> {
+        // Close current account window
+        Stage currentStage = (Stage) logoutBtn.getScene().getWindow();
+        currentStage.close();
 
-        home.setOnAction(e -> {
-            Scene homeScene = new Scene(new Home(user).mainCondition(primaryStage), 500, 400);
-            homeScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
-            primaryStage.setScene(homeScene);
+        // Open login window
+        Stage loginStage = new Stage();
+        new Login().start(loginStage);
         });
 
-        post.setOnAction(e -> {
-            Scene postScene = new Scene(new PostView(user).mainCondition(primaryStage), 500, 400);
-            postScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
-            primaryStage.setScene(postScene);
-        });
 
-        account.setOnAction(e -> {
-            Scene accountScene = new Scene(new Account(user).mainCondition(primaryStage), 500, 400);
-            accountScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
-            primaryStage.setScene(accountScene);
-        });
+        HBox box = new HBox(themeBtn, logoutBtn);
+        box.setSpacing(20);
+        box.setAlignment(Pos.CENTER);
+        box.setPadding(new Insets(10, 0, 0, 0));
 
-        Circle profileCircle = new Circle(15);
-        profileCircle.getStyleClass().add("circle");
-
-        String initials = getUserInitials();
-        Text userInitial = new Text(initials);
-        userInitial.getStyleClass().add("text");
-
-        StackPane profilePic = new StackPane(profileCircle, userInitial);
-
-        HBox total = new HBox(profilePic, home, post, account);
-        total.setSpacing(10);
-        total.getStyleClass().add("top-bar");
-        total.setAlignment(Pos.TOP_LEFT);
-
-        return total;
+        return box;
     }
-
-    // Helper to generate initials from first & last name
     private String getUserInitials() {
         if (user == null) return "GU"; // Guest User
         String first = (user.getFirstName() != null && !user.getFirstName().isEmpty())

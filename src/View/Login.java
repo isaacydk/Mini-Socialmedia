@@ -1,5 +1,6 @@
 package View;
 
+import View.MainApp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -84,18 +85,20 @@ public class Login extends Application {
     }
 
     private Node getSignupButton() {
-        Button button = new Button("Sign up");
-        button.setOnAction(evt -> handleSignup());
-        HBox hButton = new HBox(button);
+        Button Butonabc = new Button("Sign up");
+        Butonabc.getStyleClass().add("Butonabc");
+        Butonabc.setOnAction(evt -> handleSignup());
+        HBox hButton = new HBox(Butonabc);
         hButton.setAlignment(Pos.CENTER);
         return hButton;
     }
 
     private Node getSwitchToLogin() {
         Label logIn = new Label("Already have an account? ");
-        Button bLog = new Button("Log in");
-        bLog.setOnAction(evt -> primaryStage.setScene(scene2));
-        HBox log = new HBox(logIn, bLog);
+        Hyperlink hyperlinkabc = new Hyperlink("Log in");
+        hyperlinkabc.getStyleClass().add("hyperlinkabc");
+        hyperlinkabc.setOnAction(evt -> primaryStage.setScene(scene2));
+        HBox log = new HBox(logIn, hyperlinkabc);
         log.setAlignment(Pos.CENTER);
         return log;
     }
@@ -147,7 +150,7 @@ public class Login extends Application {
 
             
 
-            Home homeApp = new Home(newUser);
+            MainApp homeApp = new MainApp(newUser);
             Stage homeStage = new Stage();
             homeApp.start(homeStage);
 
@@ -198,72 +201,76 @@ public class Login extends Application {
     }
 
     private Node getLoginButton() {
-        Button button = new Button("Log in");
-        button.setOnAction(evt -> handleLogin());
-        HBox hButton = new HBox(button);
+        Button Butonabc = new Button("Log in");
+        Butonabc.getStyleClass().add("Butonabc");
+        Butonabc.setOnAction(evt -> handleLogin());
+        HBox hButton = new HBox(Butonabc);
         hButton.setAlignment(Pos.CENTER);
         return hButton;
     }
 
     private Node getSwitchToSignup() {
         Label signUp = new Label("Don't have an account? ");
-        Button bSign = new Button("Sign up");
-        bSign.setOnAction(evt -> primaryStage.setScene(scene1));
-        HBox sign = new HBox(signUp, bSign);
+        Hyperlink hyperlinkabc = new Hyperlink("Sign up");
+        hyperlinkabc.getStyleClass().add("hyperlinkabc");
+        hyperlinkabc.setOnAction(evt -> primaryStage.setScene(scene1));
+        HBox sign = new HBox(signUp, hyperlinkabc);
         sign.setAlignment(Pos.CENTER);
         return sign;
     }
 
     private void handleLogin() {
-    String inputUser = tLoginUsername.getText();
-    String inputPass = tLoginPassword.getText();
+        String inputUser = tLoginUsername.getText();
+        String inputPass = tLoginPassword.getText();
 
-    String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
 
-    try (Connection conn = db.connect();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = db.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-        pstmt.setString(1, inputUser);
-        pstmt.setString(2, inputPass);
+            pstmt.setString(1, inputUser);
+            pstmt.setString(2, inputPass);
 
-        ResultSet rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
 
-        if (rs.next()) {
-            // ✅ Build User object with ID and other fields
-            User loggedInUser = new User();
-            loggedInUser.setId(rs.getInt("id"));
-            loggedInUser.setFirstName(rs.getString("firstName"));
-            loggedInUser.setLastName(rs.getString("lastName"));
-            loggedInUser.setUsername(rs.getString("username"));
-            loggedInUser.setEmail(rs.getString("email"));
-            loggedInUser.setPassword(rs.getString("password")); // if you store it
+            if (rs.next()) {
+                // ✅ Build User object with ID and other fields
+                User loggedInUser = new User();
+                loggedInUser.setId(rs.getInt("id"));
+                loggedInUser.setFirstName(rs.getString("firstName"));
+                loggedInUser.setLastName(rs.getString("lastName"));
+                loggedInUser.setUsername(rs.getString("username"));
+                loggedInUser.setEmail(rs.getString("email"));
+                loggedInUser.setPassword(rs.getString("password")); // if you store it
 
-            showAlert(Alert.AlertType.INFORMATION, "Login Success",
-                    "Welcome back, " + loggedInUser.getFirstName() + " " + loggedInUser.getLastName() + "!");
+                showAlert(Alert.AlertType.INFORMATION, "Login Success",
+                        "Welcome back, " + loggedInUser.getFirstName() + " " + loggedInUser.getLastName() + "!");
 
-            // ✅ Pass user into Home
-            Home homeApp = new Home(loggedInUser);
-            Stage homeStage = new Stage();
-            homeApp.start(homeStage);
+                // ✅ Pass user into Home
+                MainApp homeApp = new MainApp(loggedInUser);
+                Stage homeStage = new Stage();
+                homeApp.start(homeStage);
+                // openHome(loggedInUser);
 
-            primaryStage.close();
+                primaryStage.close();
 
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password!");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password!");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Could not connect to the database.");
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        showAlert(Alert.AlertType.ERROR, "Database Error", "Could not connect to the database.");
     }
-}
 
 
 
     // Helper methods
     private Region sHead(String title) {
         Label header = new Label(title);
-        header.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        // header.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        header.getStyleClass().add("header");
         HBox head = new HBox(header);
         head.setAlignment(Pos.CENTER);
         return head;

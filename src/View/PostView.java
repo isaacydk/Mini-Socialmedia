@@ -20,118 +20,55 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+public class PostView {
 
-public class PostView extends Application {
+    //line47 problem
 
     private User user;  // currently logged-in user
-    private Database db = new Database(); // your DB handler
 
-    public PostView() {} // no-arg constructor for JavaFX
     public PostView(User user) {
         this.user = user;
     }
 
-    @Override
-    public void start(Stage primaryStage){
-        Scene scene = new Scene(mainCondition(primaryStage), 500, 400);
-        ThemeManager.applyTheme(scene);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Post");
-        primaryStage.show();
-    }
+    public VBox buildPostBody(VBox Box) {
 
-    public VBox mainCondition(Stage stage){
-        VBox total = new VBox(topBar(stage), postArea(stage));
-        total.setSpacing(10);
-        total.setPadding(new Insets(10));
-        return total;
-    }
-
-    private Region postArea(Stage stage) {
         TextArea inputArea = new TextArea();
         inputArea.setPromptText("Write your post here...");
         inputArea.setWrapText(true);
         inputArea.setPrefRowCount(5);
+        inputArea.getStyleClass().add("temporary");
 
-        Button postButton = new Button("Post");
-        Button cancelButton = new Button("Cancel");
+        Database db = new Database(); // your DB handler
 
-        // 🔹 Save post to DB when clicked
-        postButton.setOnAction(e -> {
+        Button postBtn = new Button("Post");
+        postBtn.setOnAction(e -> {
             String content = inputArea.getText().trim();
             if (!content.isEmpty() && user != null) {
                 Post newPost = new Post(user.getId(), content, user.getUsername(), LocalDateTime.now());
                 db.addPost(newPost);
 
+                Box.getChildren().setAll(new Home(user).buildHomeBody());
                 // Redirect back to Home after posting
-                Scene homeScene = new Scene(new Home(user).mainCondition(stage), 500, 400);
-                homeScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
-                stage.setScene(homeScene);
+                // Scene homeScene = new Scene(new Home(user).mainCondition(stage), 500, 400);//next line there is a problem
+                // homeScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
+                // stage.setScene(homeScene);
             }
         });
 
-        cancelButton.setOnAction(e -> {
-            // Go back to Home without posting
-            Scene homeScene = new Scene(new Home(user).mainCondition(stage), 500, 400);
-            homeScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
-            stage.setScene(homeScene);
-        });
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(e -> inputArea.clear());
 
-        HBox buttonBar = new HBox(10, postButton, cancelButton);
+
+        HBox buttonBar = new HBox(10, postBtn, cancelBtn);
         buttonBar.setAlignment(Pos.CENTER_RIGHT);
-
-        VBox postBox = new VBox(inputArea, buttonBar);
+        
+        VBox postBox = new VBox();
         postBox.setSpacing(10);
         postBox.setPadding(new Insets(10));
 
+        postBox.getChildren().addAll(inputArea, buttonBar);
+        // postBox.getStyleClass().add("border-one");
+
         return postBox;
-    }
-
-    private Region topBar(Stage primaryStage){
-        Hyperlink home = new Hyperlink("Home");
-        Hyperlink post = new Hyperlink("Post");
-        Hyperlink account = new Hyperlink("Account");
-
-        home.setOnAction(e -> {
-            Scene homeScene = new Scene(new Home(user).mainCondition(primaryStage), 500, 400);
-            homeScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
-            primaryStage.setScene(homeScene);
-        });
-
-        post.setOnAction(e -> {
-            Scene postScene = new Scene(new PostView(user).mainCondition(primaryStage), 500, 400);
-            postScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
-            primaryStage.setScene(postScene);
-        });
-
-        account.setOnAction(e -> {
-            Scene accountScene = new Scene(new Account(user).mainCondition(primaryStage), 500, 400);
-            accountScene.getStylesheets().add(this.getClass().getResource("/css/Dark-theme.css").toExternalForm());
-            primaryStage.setScene(accountScene);
-        });
-
-        Circle profileCircle = new Circle(15);
-        profileCircle.getStyleClass().add("circle");
-
-        String initials = getUserInitials();
-        Text userInitial = new Text(initials);
-        userInitial.getStyleClass().add("text");
-
-        StackPane profilePic = new StackPane(profileCircle, userInitial);
-
-        HBox total = new HBox(profilePic, home, post, account);
-        total.setSpacing(10);
-        total.getStyleClass().add("top-bar");
-        total.setAlignment(Pos.TOP_LEFT);
-
-        return total;
-    }
-    private String getUserInitials() {
-        if (user == null) return "GU"; // Guest User
-        String first = (user.getFirstName() != null && !user.getFirstName().isEmpty())
-                ? user.getFirstName().substring(0, 1).toUpperCase() : "";
-        String last = (user.getLastName() != null && !user.getLastName().isEmpty())
-                ? user.getLastName().substring(0, 1).toUpperCase() : "";
-        return first + last;
     }
 }

@@ -1,5 +1,5 @@
 /* Button styling */
-.button {
+.Butonabc {
     -fx-background-radius: 20px;
     -fx-background-color: #2e7d32;
     -fx-effect: dropshadow(gaussian, rgba(30, 60, 30, 0.4), 8, 0.2, 0, 2);
@@ -35,4 +35,22 @@
     -fx-text-fill: #145a32;
     /* -fx-padding: 6 12; */
     -fx-prompt-text-fill: #81c784;
+}
+/* .header {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-fill: #000000;
+}
+.hyperlink {
+    -fx-underline: false;
+    -fx-focus-color: transparent; 
+    -fx-faint-focus-color: transparent; 
+    -fx-text-fill: #ffffff; 
+} */
+
+.hyperlinkabc {
+    -fx-text-fill: #ffffff;
+    -fx-underline: false;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }

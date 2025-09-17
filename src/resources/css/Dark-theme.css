@@ -1,5 +1,6 @@
 .root{
     -fx-background-color: #5a5959;
+    -fx-font-family: 'Arial';
 }
 .top-bar {
     -fx-border-color: transparent transparent #218c5a transparent;
@@ -73,7 +74,14 @@
 }
 .text-area {
     -fx-border-radius: 30px;
-}/* ...existing code... */
+}
+
+.border-two {
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #218c5a;
+    -fx-border-width: 2px;
+}
 
 .temporary {
     -fx-background-color: transparent;        /* make outer control transparent */
@@ -105,4 +113,10 @@
 }
 .temporary .prompt-text {
     -fx-fill: #81c784;
+}
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+.viewport {
+    -fx-background-color: transparent;
 }
