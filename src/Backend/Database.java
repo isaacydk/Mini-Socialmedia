@@ -90,58 +90,83 @@ public class Database {
 
     // ✅ Fetch all posts from the database
     public List<Post> getAllPosts() {
-        List<Post> posts = new ArrayList<>();
-        String sql = "SELECT id, user_id, content, created_at FROM POSTS ORDER BY created_at DESC";
+    List<Post> posts = new ArrayList<>();
+    String sql = "SELECT p.id, p.user_id, p.content, p.created_at, u.username " +
+                 "FROM POSTS p " +
+                 "JOIN USERS u ON p.user_id = u.id " +
+                 "ORDER BY p.created_at DESC";
 
-        try (Connection conn = connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+    try (Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            int userId = rs.getInt("user_id");
+            String content = rs.getString("content");
+            String username = rs.getString("username");
+            LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
 
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                int userId = rs.getInt("user_id");
-                String content = rs.getString("content");
-                String createdAtStr = rs.getString("created_at");
-                LocalDateTime createdAt = LocalDateTime.parse(createdAtStr, formatter);
-
-                posts.add(new Post(id, userId, content, createdAt));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            Post post = new Post(userId, content, username, createdAt);
+            post.setId(id); // if your Post has a setter
+            posts.add(post);
         }
-        return posts;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return posts;
+}
 
-    // ✅ Like a post (insert only if the user hasn’t liked it already)
-    public boolean likePost(int userId, int postId) {
-        String checkSql = "SELECT COUNT(*) FROM LIKES WHERE user_id = ? AND post_id = ?";
-        String insertSql = "INSERT INTO LIKES(user_id, post_id, created_at) VALUES(?, ?, datetime('now'))";
 
-        try (Connection conn = connect();
-             PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+    public void addPost(Post post) {
+    String sql = "INSERT INTO POSTS (user_id, content) VALUES (?, ?)";
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setInt(1, post.getUserId());
+        pstmt.setString(2, post.getContent());
+        pstmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
 
-            checkStmt.setInt(1, userId);
-            checkStmt.setInt(2, postId);
-            ResultSet rs = checkStmt.executeQuery();
 
-            if (rs.next() && rs.getInt(1) > 0) {
-                // User already liked this post
-                return false;
-            }
 
-            try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
-                insertStmt.setInt(1, userId);
-                insertStmt.setInt(2, postId);
-                insertStmt.executeUpdate();
-                return true;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    // Get like count for a specific post
+public int getLikeCount(int postId) {
+    String sql = "SELECT COUNT(*) FROM LIKES WHERE post_id = ?";
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setInt(1, postId);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1);
         }
-        return false;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return 0;
+}
+
+// Add a like (userId liking a post)
+public void addLike(int postId, int userId) {
+    String sql = "INSERT OR IGNORE INTO LIKES (post_id, user_id) VALUES (?, ?)";
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setInt(1, postId);
+        pstmt.setInt(2, userId);
+        pstmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+// Remove a like
+public void removeLike(int userId, int postId) {
+    String sql = "DELETE FROM LIKES WHERE user_id = ? AND post_id = ?";
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setInt(1, userId);
+        pstmt.setInt(2, postId);
+        pstmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
 }

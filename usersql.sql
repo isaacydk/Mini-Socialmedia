@@ -16,7 +16,7 @@
 -- DELETE FROM USERS
 -- WHERE username = "natiusername";
 
--- DROP TABLE USERS;
+-- DROP TABLE POSTS;
 -- SELECT * FROM users WHERE username = yoniusername AND password = yonipasswrd;
 
 

@@ -11,6 +11,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -119,10 +120,33 @@ public class Login extends Application {
         return;
         }
 
+
         boolean success = db.insertUser(firstName, lastName, username, email, password);
         if (success) {
             // ✅ Open Home page with user info
-            User newUser = new User(firstName, lastName, username, email, password);
+
+            String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+
+    try (Connection conn = db.connect();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+        pstmt.setString(1, username);
+        pstmt.setString(2, password);
+
+        ResultSet rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            // ✅ Build User object with ID and other fields
+            User newUser = new User();
+            newUser.setId(rs.getInt("id"));
+            newUser.setFirstName(rs.getString("firstName"));
+            newUser.setLastName(rs.getString("lastName"));
+            newUser.setUsername(rs.getString("username"));
+            newUser.setEmail(rs.getString("email"));
+            newUser.setPassword(rs.getString("password")); 
+
+            
+
             Home homeApp = new Home(newUser);
             Stage homeStage = new Stage();
             homeApp.start(homeStage);
@@ -131,9 +155,12 @@ public class Login extends Application {
             primaryStage.close();
 
         }
+    }
+    catch (SQLException e) {
+        e.printStackTrace();
+        showAlert(Alert.AlertType.ERROR, "Database Error", "Could not connect to the database.");
+    }
            
-         
-
 
         if (!success) {
             showAlert(Alert.AlertType.ERROR, "Signup Error", "Failed to register user. Try again.");
@@ -145,7 +172,9 @@ public class Login extends Application {
 
         // Switch to login page
         primaryStage.setScene(scene2);
+    
     }
+}
 
     // LOGIN PAGE
     private Region loginPage() {
@@ -189,10 +218,9 @@ public class Login extends Application {
     String inputUser = tLoginUsername.getText();
     String inputPass = tLoginPassword.getText();
 
-    // Database query
     String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
 
-    try (Connection conn = db.connect(); 
+    try (Connection conn = db.connect();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
         pstmt.setString(1, inputUser);
@@ -201,25 +229,24 @@ public class Login extends Application {
         ResultSet rs = pstmt.executeQuery();
 
         if (rs.next()) {
-            String firstName = rs.getString("firstName");
-            String lastName = rs.getString("lastName");
-            String username = rs.getString("username");
-            String email = rs.getString("email");
-            String password = rs.getString("password");
-            User loggedInUser = new User(firstName, lastName, username, email, password);
+            // ✅ Build User object with ID and other fields
+            User loggedInUser = new User();
+            loggedInUser.setId(rs.getInt("id"));
+            loggedInUser.setFirstName(rs.getString("firstName"));
+            loggedInUser.setLastName(rs.getString("lastName"));
+            loggedInUser.setUsername(rs.getString("username"));
+            loggedInUser.setEmail(rs.getString("email"));
+            loggedInUser.setPassword(rs.getString("password")); // if you store it
 
             showAlert(Alert.AlertType.INFORMATION, "Login Success",
-                    "Welcome back, " + firstName + " " + lastName + "!");
+                    "Welcome back, " + loggedInUser.getFirstName() + " " + loggedInUser.getLastName() + "!");
 
-
-              // ✅ Open Home page
+            // ✅ Pass user into Home
             Home homeApp = new Home(loggedInUser);
             Stage homeStage = new Stage();
             homeApp.start(homeStage);
 
-            // Close login window
             primaryStage.close();
-           
 
         } else {
             showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password!");
@@ -230,6 +257,7 @@ public class Login extends Application {
         showAlert(Alert.AlertType.ERROR, "Database Error", "Could not connect to the database.");
     }
 }
+
 
 
     // Helper methods
@@ -260,5 +288,10 @@ public class Login extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public Parent mainCondition(Stage stage) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'mainCondition'");
     }
 }
