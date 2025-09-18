@@ -123,3 +123,8 @@
 .home-content{
     -fx-padding: 20;
 }
+.transparent-scroll-pane .viewport {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}

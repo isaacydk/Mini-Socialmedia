@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -32,23 +33,23 @@ public class MainApp extends Application {
     }
 
     private Region mainCondition() {
-        VBox root = new VBox();
-        root.setSpacing(10);
-
         // Top bar (constant)
         HBox topBar = createTopBar();
 
         // Content placeholder (start with Home)
         contentBox = new VBox();
         contentBox.getChildren().add(new Home(user).buildHomeBody());
-
+        
+        VBox root = new VBox();
+        root.setSpacing(10);
+        
         root.getChildren().addAll(contentBox);
         ScrollPane scroll = new ScrollPane(root);
-        scroll.setFitToWidth(true); // stretch VBox to width
-        scroll.setPannable(true);   // allow mouse drag scrolling
-        scroll.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scroll.setHbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.getStyleClass().add("scroll-pane");
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+        scroll.getViewportBounds();
+        scroll.setFitToWidth(true);
 
         VBox total = new VBox(topBar, scroll);
         return total;
