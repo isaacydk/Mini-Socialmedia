@@ -40,6 +40,7 @@ public class Home {
 
         for (Post post : posts) {
             content.getChildren().add(displayTextArea(post));
+            content.setSpacing(10);
         }
 
         // ScrollPane scroll = new ScrollPane(content);
@@ -47,7 +48,7 @@ public class Home {
         // scroll.setPannable(true);   // allow mouse drag scrolling
         // scroll.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
         // scroll.setHbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
-
+        content.getStyleClass().add("temporary-one");
         return content;
     }
     private Region displayTextArea(Post post) {

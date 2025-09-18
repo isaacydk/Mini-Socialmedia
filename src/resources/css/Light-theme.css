@@ -17,6 +17,7 @@
     -fx-fill: gray;
 }
 .border-one{
+    -fx-background-color: transparent; /* remove white fill */
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
     -fx-border-color: #218c5a;
@@ -96,6 +97,15 @@
     -fx-border-width: 2px;                    /* adjustable border width */
     -fx-padding: 6;                           /* inner spacing so text doesn't touch border */
 }
+.temporary-one {
+    -fx-background-color: transparent;        /* make outer control transparent */
+    -fx-background-insets: 0;
+    -fx-background-radius: 12px;              /* adjustable corner radius */
+    -fx-border-radius: 12px;
+    -fx-border-color: transparent;   /* green border */
+    -fx-border-width: 2px;                    /* adjustable border width */
+    -fx-padding: 6;                           /* inner spacing so text doesn't touch border */
+}
 
 /* ensure the inner content area is also transparent and curved */
 .temporary .content {
@@ -105,17 +115,17 @@
 }
 
 /* if a ScrollPane/viewport is present, make it transparent too */
-.temporary .scroll-pane,
-.temporary .viewport {
+.temporary-one .scroll-pane,
+.temporary-one .viewport {
     -fx-background-color: transparent;
     -fx-background-insets: 0;
 }
-.scroll-pane{
+.scrollpane{
     -fx-background-color: transparent;
 }
-.viewport{
+/* .viewport{
     -fx-background-color: transparent;
-}
+} */
 /* optional: prompt text color and main text color */
 .temporary .text {
     -fx-fill: #00fff2;
@@ -123,3 +133,26 @@
 .temporary .prompt-text {
     -fx-fill: #81c784;
 }
+.hbox{
+    -fx-spacing: 10px; /* Adjust spacing between children */
+    -fx-background-color: transparent;
+    -fx-padding: 10px; /* Optional padding around the HBox */
+    -fx-background-insets: 0;
+}
+.vbox{
+    -fx-spacing: 10px; /* Adjust spacing between children */
+    -fx-padding: 10px; /* Optional padding around the VBox */
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+/* make the ScrollPane and its viewport transparent */
+/* .scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+} */

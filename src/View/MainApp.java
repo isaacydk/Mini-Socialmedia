@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
+import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -42,14 +43,19 @@ public class MainApp extends Application {
         contentBox = new VBox();
         contentBox.getChildren().add(new Home(user).buildHomeBody());
 
-        root.getChildren().addAll(topBar, contentBox);
+        root.getChildren().addAll(contentBox);
+        root.setSpacing(10);
+        root.setPadding(new Insets(10));
         ScrollPane scroll = new ScrollPane(root);
         scroll.setFitToWidth(true); // stretch VBox to width
         scroll.setPannable(true);   // allow mouse drag scrolling
         scroll.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scroll.setHbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.getStyleClass().add("scroll-pane");
-        return scroll;
+        scroll.getStyleClass().add("scroll");
+        
+        VBox total = new VBox(topBar, scroll);
+        return total;
+
     }
 
     private HBox createTopBar() {
