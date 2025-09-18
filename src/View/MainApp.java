@@ -42,14 +42,16 @@ public class MainApp extends Application {
         contentBox = new VBox();
         contentBox.getChildren().add(new Home(user).buildHomeBody());
 
-        root.getChildren().addAll(topBar, contentBox);
+        root.getChildren().addAll(contentBox);
         ScrollPane scroll = new ScrollPane(root);
         scroll.setFitToWidth(true); // stretch VBox to width
         scroll.setPannable(true);   // allow mouse drag scrolling
         scroll.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scroll.setHbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
         scroll.getStyleClass().add("scroll-pane");
-        return scroll;
+
+        VBox total = new VBox(topBar, scroll);
+        return total;
     }
 
     private HBox createTopBar() {
@@ -74,7 +76,8 @@ public class MainApp extends Application {
 
         HBox topBar = new HBox(profilePic, home, post, account);
         topBar.setSpacing(10);
-        topBar.getStyleClass().add("top-bar");
+        // topBar.getStyleClass().add("top-bar");
+        topBar.setStyle("-fx-border-color: transparent transparent #218c5a transparent; -fx-border-width: 0 0 2px 0; -fx-padding: 15 25 15 25;");
         topBar.setAlignment(Pos.TOP_LEFT);
 
         return topBar;

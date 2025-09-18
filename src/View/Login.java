@@ -96,7 +96,7 @@ public class Login extends Application {
     private Node getSwitchToLogin() {
         Label logIn = new Label("Already have an account? ");
         Hyperlink hyperlinkabc = new Hyperlink("Log in");
-        hyperlinkabc.getStyleClass().add("hyperlinkabc");
+        hyperlinkabc.setStyle("-fx-underline: false; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-text-fill: #ffffff;");
         hyperlinkabc.setOnAction(evt -> primaryStage.setScene(scene2));
         HBox log = new HBox(logIn, hyperlinkabc);
         log.setAlignment(Pos.CENTER);
@@ -212,7 +212,7 @@ public class Login extends Application {
     private Node getSwitchToSignup() {
         Label signUp = new Label("Don't have an account? ");
         Hyperlink hyperlinkabc = new Hyperlink("Sign up");
-        hyperlinkabc.getStyleClass().add("hyperlinkabc");
+        hyperlinkabc.setStyle("-fx-underline: false; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-text-fill: #ffffff;");
         hyperlinkabc.setOnAction(evt -> primaryStage.setScene(scene1));
         HBox sign = new HBox(signUp, hyperlinkabc);
         sign.setAlignment(Pos.CENTER);

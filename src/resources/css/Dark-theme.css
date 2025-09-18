@@ -120,3 +120,6 @@
 .viewport {
     -fx-background-color: transparent;
 }
+.home-content{
+    -fx-padding: 20;
+}
