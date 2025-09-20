@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import Backend.Database;
 import Backend.User;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,8 +23,8 @@ import javafx.stage.Stage;
 
 public class Login extends Application {
     private Stage primaryStage;
-    private Scene scene1; // Signup scene
-    private Scene scene2; // Login scene
+    private Scene scene1; //signup scene
+    private Scene scene2; //login scene
     private static final double wLabel = 100;
 
     // Store user values in variables (in memory)
@@ -33,18 +34,14 @@ public class Login extends Application {
     private String email;
     private String password;
 
-    // Input fields for signup
     private TextField tFirstName, tLastName, tUsername, tEmail;
     private PasswordField tPassword, tCpassword;
     
-    // Input fields for login
     private TextField tLoginUsername;
     private PasswordField tLoginPassword;
 
-    // Database instance
     private Database db = new Database();
 
-    @Override
     public void start(Stage stage) {
         primaryStage = stage;
         scene1 = new Scene(signupPage(), 800, 700);
@@ -55,7 +52,8 @@ public class Login extends Application {
         primaryStage.show();
     }
 
-    // SIGNUP PAGE
+    //SIGNUP PAGE
+
     private Region signupPage() {
         tFirstName = new TextField();
         tLastName = new TextField();
@@ -78,17 +76,16 @@ public class Login extends Application {
         total.setSpacing(10);
         total.setAlignment(Pos.CENTER_LEFT);
         total.setPadding(new Insets(20));
-
         total.getStylesheets().add(getClass().getResource("/css/Login.css").toExternalForm());
 
         return total;
     }
 
     private Node getSignupButton() {
-        Button Butonabc = new Button("Sign up");
-        Butonabc.getStyleClass().add("Butonabc");
-        Butonabc.setOnAction(evt -> handleSignup());
-        HBox hButton = new HBox(Butonabc);
+        Button Buttonabc = new Button("Sign up");
+        Buttonabc.getStyleClass().add("Button");
+        Buttonabc.setOnAction(evt -> handleSignup());
+        HBox hButton = new HBox(Buttonabc);
         hButton.setAlignment(Pos.CENTER);
         return hButton;
     }
@@ -110,8 +107,6 @@ public class Login extends Application {
             showAlert(Alert.AlertType.ERROR, "Signup Error", "Passwords do not match!");
             return;
         }
-
-        // Store values in variables
         firstName = tFirstName.getText();
         lastName = tLastName.getText();
         username = tUsername.getText();
@@ -123,63 +118,51 @@ public class Login extends Application {
         return;
         }
 
-
         boolean success = db.insertUser(firstName, lastName, username, email, password);
         if (success) {
-            // ✅ Open Home page with user info
-
             String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
 
-    try (Connection conn = db.connect();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            try (Connection conn = db.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-        pstmt.setString(1, username);
-        pstmt.setString(2, password);
+                pstmt.setString(1, username);
+                pstmt.setString(2, password);
 
-        ResultSet rs = pstmt.executeQuery();
+                ResultSet rs = pstmt.executeQuery();
 
-        if (rs.next()) {
-            // ✅ Build User object with ID and other fields
-            User newUser = new User();
-            newUser.setId(rs.getInt("id"));
-            newUser.setFirstName(rs.getString("firstName"));
-            newUser.setLastName(rs.getString("lastName"));
-            newUser.setUsername(rs.getString("username"));
-            newUser.setEmail(rs.getString("email"));
-            newUser.setPassword(rs.getString("password")); 
+                if (rs.next()) {
+                    User newUser = new User();
+                    newUser.setId(rs.getInt("id"));
+                    newUser.setFirstName(rs.getString("firstName"));
+                    newUser.setLastName(rs.getString("lastName"));
+                    newUser.setUsername(rs.getString("username"));
+                    newUser.setEmail(rs.getString("email"));
+                    newUser.setPassword(rs.getString("password")); 
 
-            
+                    MainApp homeApp = new MainApp(newUser);
+                    Stage homeStage = new Stage();
+                    homeApp.start(homeStage);
 
-            MainApp homeApp = new MainApp(newUser);
-            Stage homeStage = new Stage();
-            homeApp.start(homeStage);
+                    primaryStage.close();
+                }
+            }catch (SQLException e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Database Error", "Could not connect to the database.");
+            }
+            if (!success) {
+                showAlert(Alert.AlertType.ERROR, "Signup Error", "Failed to register user. Try again.");
+                return;
+            }
+            showAlert(Alert.AlertType.INFORMATION, "Signup Success",
+                    "User registered successfully!\nWelcome " + firstName + " " + lastName);
 
-            // Close login window
-            primaryStage.close();
-
+            primaryStage.setScene(scene2);
+        
         }
     }
-    catch (SQLException e) {
-        e.printStackTrace();
-        showAlert(Alert.AlertType.ERROR, "Database Error", "Could not connect to the database.");
-    }
-           
-
-        if (!success) {
-            showAlert(Alert.AlertType.ERROR, "Signup Error", "Failed to register user. Try again.");
-            return;
-        }
-
-        showAlert(Alert.AlertType.INFORMATION, "Signup Success",
-                "User registered successfully!\nWelcome " + firstName + " " + lastName);
-
-        // Switch to login page
-        primaryStage.setScene(scene2);
-    
-    }
-}
 
     // LOGIN PAGE
+
     private Region loginPage() {
         tLoginUsername = new TextField();
         tLoginPassword = new PasswordField();
@@ -201,10 +184,10 @@ public class Login extends Application {
     }
 
     private Node getLoginButton() {
-        Button Butonabc = new Button("Log in");
-        Butonabc.getStyleClass().add("Butonabc");
-        Butonabc.setOnAction(evt -> handleLogin());
-        HBox hButton = new HBox(Butonabc);
+        Button Buttonabc = new Button("Log in");
+        Buttonabc.getStyleClass().add("Button");
+        Buttonabc.setOnAction(evt -> handleLogin());
+        HBox hButton = new HBox(Buttonabc);
         hButton.setAlignment(Pos.CENTER);
         return hButton;
     }
@@ -234,7 +217,6 @@ public class Login extends Application {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                // ✅ Build User object with ID and other fields
                 User loggedInUser = new User();
                 loggedInUser.setId(rs.getInt("id"));
                 loggedInUser.setFirstName(rs.getString("firstName"));
@@ -246,11 +228,9 @@ public class Login extends Application {
                 showAlert(Alert.AlertType.INFORMATION, "Login Success",
                         "Welcome back, " + loggedInUser.getFirstName() + " " + loggedInUser.getLastName() + "!");
 
-                // ✅ Pass user into Home
                 MainApp homeApp = new MainApp(loggedInUser);
                 Stage homeStage = new Stage();
                 homeApp.start(homeStage);
-                // openHome(loggedInUser);
 
                 primaryStage.close();
 
@@ -264,12 +244,9 @@ public class Login extends Application {
         }
     }
 
-
-
     // Helper methods
     private Region sHead(String title) {
         Label header = new Label(title);
-        // header.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         header.getStyleClass().add("header");
         HBox head = new HBox(header);
         head.setAlignment(Pos.CENTER);
@@ -298,7 +275,6 @@ public class Login extends Application {
     }
 
     public Parent mainCondition(Stage stage) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'mainCondition'");
     }
 }

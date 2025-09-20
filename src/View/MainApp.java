@@ -1,11 +1,11 @@
 package View;
 
 import Backend.User;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -16,14 +16,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
-    private User user;           // currently logged-in user
-    private VBox contentBox;     // placeholder for page body
+    private User user;
+    private VBox contentBox;
 
     public MainApp(User user){
         this.user = user;
     }
 
-    @Override
     public void start(Stage primaryStage) {
         Scene scene = new Scene(mainCondition(), 500, 400);
         ThemeManager.applyTheme(scene);
@@ -33,10 +32,7 @@ public class MainApp extends Application {
     }
 
     private Region mainCondition() {
-        // Top bar (constant)
         HBox topBar = createTopBar();
-
-        // Content placeholder (start with Home)
         contentBox = new VBox();
         contentBox.getChildren().add(new Home(user).buildHomeBody());
         
@@ -60,24 +56,23 @@ public class MainApp extends Application {
         Hyperlink post = new Hyperlink("Post");
         Hyperlink account = new Hyperlink("Account");
 
-        // Navigation (swap VBox body)
+        //swap VBox body
         home.setOnAction(e -> contentBox.getChildren().setAll(new Home(user).buildHomeBody()));
         post.setOnAction(e -> contentBox.getChildren().setAll(new PostView(user).buildPostBody(contentBox)));
         account.setOnAction(e -> contentBox.getChildren().setAll(new Account(user).buildAccountBody()));
 
-        // Profile icon
         Circle profileCircle = new Circle(15);
         profileCircle.getStyleClass().add("circle");
 
-        String initials = getUserInitials();  // ✅ fixed (no "new")
+        String initials = getUserInitials();
         Text userInitial = new Text(initials);
         userInitial.getStyleClass().add("text");
 
         StackPane profilePic = new StackPane(profileCircle, userInitial);
 
+        //the getStyle method doesn't seem to be working
         HBox topBar = new HBox(profilePic, home, post, account);
         topBar.setSpacing(10);
-        // topBar.getStyleClass().add("top-bar");
         topBar.setStyle("-fx-border-color: transparent transparent #218c5a transparent; -fx-border-width: 0 0 2px 0; -fx-padding: 15 25 15 25;");
         topBar.setAlignment(Pos.TOP_LEFT);
 
@@ -85,7 +80,7 @@ public class MainApp extends Application {
     }
 
     private String getUserInitials() {
-        if (user == null) return "GU"; // Guest User
+        if (user == null) return "GU";
         String first = (user.getFirstName() != null && !user.getFirstName().isEmpty())
                 ? user.getFirstName().substring(0, 1).toUpperCase() : "";
         String last = (user.getLastName() != null && !user.getLastName().isEmpty())

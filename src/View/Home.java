@@ -1,28 +1,21 @@
 package View;
 
-import java.time.LocalTime;
 import Backend.User;
 import java.util.List;
 import Backend.Post;
 import Backend.Database; 
 
 
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 public class Home {
-    User user; // Current logged-in user
+    User user; 
 
     private Database db = new Database();
 
@@ -30,11 +23,6 @@ public class Home {
         this.user = user; 
     }
     public VBox buildHomeBody(){
-        // Text t1 = new Text("This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. This is a temporary paragraph. ");
-        // VBox total = new VBox(displayTextArea(t1.getText()));
-        // total.setSpacing(10);
-        // total.setPadding(new Insets(10));
-        // return total;
         VBox content = new VBox();
         List<Post> posts = db.getAllPosts();
 
@@ -43,19 +31,14 @@ public class Home {
             content.setSpacing(10);
         }
 
-        // ScrollPane scroll = new ScrollPane(content);
-        // scroll.setFitToWidth(true); // stretch VBox to width
-        // scroll.setPannable(true);   // allow mouse drag scrolling
-        // scroll.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        // scroll.setHbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
-        content.setStyle("-fx-padding: 20; fx-background-color: transparent; -fx-background-insets: 0;");
+        content.setStyle("-fx-padding: 10; fx-background-color: transparent; -fx-background-insets: 0;");
         return content;
     }
     private Region displayTextArea(Post post) {
         Text messageText = new Text(post.getContent());
         messageText.getStyleClass().add("message-text");
 
-        int likeCount = db.getLikeCount(post.getId()); // ✅ fetch like count
+        int likeCount = db.getLikeCount(post.getId());
         Text likeCountText = new Text(String.valueOf(likeCount));
         likeCountText.getStyleClass().add("text-one");
 
@@ -63,7 +46,7 @@ public class Home {
         likeLink.getStyleClass().add("links-one");
 
         likeLink.setOnAction(e -> {
-            db.addLike(post.getId(), user.getId()); // TODO: replace 1 with actual user ID
+            db.addLike(post.getId(), user.getId());
             int updatedLikeCount = db.getLikeCount(post.getId());
             likeCountText.setText(String.valueOf(updatedLikeCount));
         });
@@ -84,7 +67,6 @@ public class Home {
         bottomBar.setSpacing(10);
         bottomBar.setAlignment(Pos.CENTER_RIGHT);
 
-        // Bubble container
         VBox bubble = new VBox(messageText, bottomBar);
         bubble.setSpacing(5);
         bubble.setPadding(new Insets(8));
@@ -96,7 +78,6 @@ public class Home {
                         .bind(newScene.widthProperty().subtract(60));
             }
         });
-
 
         return bubble;
     }
