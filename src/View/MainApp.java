@@ -37,17 +37,10 @@ public class MainApp extends Application {
         contentBox.getChildren().add(new Home(user).buildHomeBody());
         
         VBox root = new VBox();
-        root.setSpacing(10);
         
         root.getChildren().addAll(contentBox);
-        ScrollPane scroll = new ScrollPane(root);
-        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
-        scroll.getViewportBounds();
-        scroll.setFitToWidth(true);
-
-        VBox total = new VBox(topBar, scroll);
+       
+        VBox total = new VBox(topBar, root);
         return total;
     }
 

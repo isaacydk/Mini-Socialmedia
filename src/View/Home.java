@@ -9,6 +9,7 @@ import Backend.Database;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -22,7 +23,7 @@ public class Home {
     public Home(User user) {
         this.user = user; 
     }
-    public VBox buildHomeBody(){
+    public Region buildHomeBody(){
         VBox content = new VBox();
         List<Post> posts = db.getAllPosts();
 
@@ -32,7 +33,15 @@ public class Home {
         }
 
         content.setStyle("-fx-padding: 10; fx-background-color: transparent; -fx-background-insets: 0;");
-        return content;
+        
+        ScrollPane scroll = new ScrollPane(content);
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+        scroll.getViewportBounds();
+        scroll.setFitToWidth(true);
+        
+        return scroll;
     }
     private Region displayTextArea(Post post) {
         Text messageText = new Text(post.getContent());
