@@ -11,9 +11,7 @@ public class User {
     private String password;
     private String email;
     private ArrayList<Post> posts;
-    private ArrayList<Comment> comments;
     private ArrayList<Post> likes;
-    private ArrayList<User> friends;
 
     public User (){}
     public User(String fistName, String lastName, String username,  String email, String password){
@@ -25,50 +23,7 @@ public class User {
         this.password = password;
         
     }
-
-    // public static void showDatabase(){
-    //     String sql = "SELECT * FROM users";
-
-    //     try (Connection conn = connect();
-    //          Statement stmt = conn.createStatement();
-    //          ResultSet rs = stmt.executeQuery(sql)) {
-
-    //         while (rs.next()) {
-    //             System.out.println(
-    //                 rs.getInt("id") + "\t" +
-    //                 rs.getString("firstName") + "\t" +
-    //                 rs.getString("lastName") + "\t" +
-    //                 rs.getString("username") + "\t" +
-    //                 rs.getString("email") + "\t" +
-    //                 rs.getString("password")
-    //             );
-    //         }
-
-    //     } catch (SQLException e) {
-    //         System.out.println(e.getMessage());
-    //     }
-    // } ------------------------------------------------------------------------------------------------- 
-    
-    // public static void deleteUserById(int id) {
-    //     String sql = "DELETE FROM users WHERE id = ?";
-
-    //     try (Connection conn = connect();
-    //          PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-    //         pstmt.setInt(1, id);
-    //         int affectedRows = pstmt.executeUpdate();
-
-    //         if (affectedRows > 0) {
-    //             System.out.println("User with ID " + id + " deleted successfully.");
-    //         } else {
-    //             System.out.println("No user found with ID " + id);
-    //         }
-
-    //     } catch (SQLException e) {
-    //         System.out.println(e.getMessage());
-    //     }
-    // }
-    
+ 
     public static Connection connect() {
         Connection conn = null;
         try {
@@ -82,24 +37,7 @@ public class User {
         return conn;
     }
     
-    // public void saveData(){
-        
-    //     String sql = "INSERT INTO users(firstName, lastName, username, email, password) VALUES(?,?,?,?,?)";
-    //     try (Connection conn = connect();
-    //      PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-    //     pstmt.setString(1, firstName);
-    //     pstmt.setString(2, lastName);
-    //     pstmt.setString(3, username);
-    //     pstmt.setString(4, email);
-    //     pstmt.setString(5, password);
-    //     pstmt.executeUpdate();
-    //     System.out.println("User inserted!");
-
-    // } catch (SQLException e) {
-    //     System.out.println(e.getMessage());
-    // }
-    // }
+   
 
     //setter and getter methods
     public void setId(int id){
@@ -154,12 +92,6 @@ public class User {
         this.posts = posts;
     }
 
-    public ArrayList<Comment> getComments(){
-        return comments;
-    }
-    public void setComments(ArrayList<Comment> comments){
-        this.comments = comments;
-    }
 
     public ArrayList<Post> getLikes(){
         return likes;
@@ -167,22 +99,5 @@ public class User {
     public void setLikes(ArrayList<Post> likes){
         this.likes = likes;
     }
-
-    public ArrayList<User> getFriends(){
-        return friends;
-    }
-    public void setFriends(ArrayList<User> friends){
-        this.friends = friends;
-    }
-    
-    //---------------------------------------------------------------------
-    public ArrayList<Integer> getFriendsIDs(){
-        ArrayList<Integer> ids = new ArrayList<>();
-        for (User friend : friends){
-            ids.add(friend.getId());
-        }
-        return ids;
-    }
-
- 
+     
 }

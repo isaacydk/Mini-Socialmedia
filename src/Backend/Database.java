@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -157,16 +156,6 @@ public void addLike(int postId, int userId) {
     }
 }
 
-// Remove a like
-public void removeLike(int userId, int postId) {
-    String sql = "DELETE FROM LIKES WHERE user_id = ? AND post_id = ?";
-    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        pstmt.setInt(1, userId);
-        pstmt.setInt(2, postId);
-        pstmt.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
+
 
 }

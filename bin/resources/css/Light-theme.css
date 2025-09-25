@@ -1,5 +1,9 @@
+.root{ 
+    -fx-background-color: #5a5959; 
+    -fx-font-family: 'Arial';
+}
 .top-bar {
-    -fx-border-color: transparent transparent #6e6a6a transparent;
+    -fx-border-color: transparent transparent #218c5a transparent;
     -fx-border-width: 0 0 2px 0;
     -fx-padding: 15 25 15 25;
 }
@@ -54,43 +58,55 @@
 }
 .hyperlink {
     -fx-underline: false;
-    -fx-focus-color: transparent;  /* Removes blue outline on focus */
-    -fx-faint-focus-color: transparent; /* Removes faint blue shadow */
+    -fx-focus-color: transparent; 
+    -fx-faint-focus-color: transparent;
 }
-.border-two {
+.post-area {
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
     -fx-border-color: #218c5a;
     -fx-border-width: 2px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #000000;
+    -fx-prompt-text-fill: #888888;
+    -fx-background-color: transparent;
+}
+.text-area {
+    -fx-border-radius: 30px;
+}
+.border-two {
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: transparent;
+    -fx-border-width: 2px;
 }
 .temporary {
-    -fx-background-color: transparent;        /* make outer control transparent */
+    -fx-background-color: transparent;
     -fx-background-insets: 0;
-    -fx-background-radius: 12px;              /* adjustable corner radius */
+    -fx-background-radius: 12px;
     -fx-border-radius: 12px;
-    -fx-border-color: rgba(33,140,90,0.85);   /* green border */
-    -fx-border-width: 2px;                    /* adjustable border width */
-    -fx-padding: 6;                           /* inner spacing so text doesn't touch border */
+    -fx-border-color: rgba(33,140,90,0.85);
+    -fx-border-width: 2px;
+    -fx-padding: 6;
 }
-
-/* ensure the inner content area is also transparent and curved */
 .temporary .content {
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-background-radius: 12px;
 }
-
-/* if a ScrollPane/viewport is present, make it transparent too */
 .temporary .scroll-pane,
 .temporary .viewport {
     -fx-background-color: transparent;
     -fx-background-insets: 0;
 }
-
-/* optional: prompt text color and main text color */
-.temporary .text {
-    -fx-fill: #00fff2;
+.scroll-pane{
+    -fx-background-color: transparent;
 }
-.temporary .prompt-text {
-    -fx-fill: #81c784;
+.viewport{
+    -fx-background-color: transparent;
+}
+.transparent-scroll-pane .viewport {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
 }
