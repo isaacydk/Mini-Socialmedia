@@ -24,7 +24,7 @@ public class MainApp extends Application {
     }
 
     public void start(Stage primaryStage) {
-        Scene scene = new Scene(mainCondition(), 500, 400);
+        Scene scene = new Scene(mainCondition(), 800, 700);
         ThemeManager.applyTheme(scene);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Social Media App");

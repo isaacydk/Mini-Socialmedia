@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import Backend.Database;
 import Backend.User;
 
+import javafx.scene.text.Text;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -64,12 +65,12 @@ public class Login extends Application {
 
         VBox total = new VBox(
             sHead("Welcome"),
-            getRow("First Name", tFirstName),
-            getRow("Last Name", tLastName),
-            getRow("Username", tUsername),
-            getRow("Email", tEmail),
-            getRow("Password", tPassword),
-            getRow("Confirm Password", tCpassword),
+            getRow("First Name", tFirstName, star()),
+            getRow("Last Name", tLastName, none()),
+            getRow("Username", tUsername, star()),
+            getRow("Email", tEmail, star()),
+            getRow("Password", tPassword, star()),
+            getRow("Confirm Password", tCpassword, star()),
             getSignupButton(),
             getSwitchToLogin()
         );
@@ -91,11 +92,14 @@ public class Login extends Application {
     }
 
     private Node getSwitchToLogin() {
+        Label t = new Label("* - required field");
         Label logIn = new Label("Already have an account? ");
         Hyperlink hyperlinkabc = new Hyperlink("Log in");
         hyperlinkabc.setStyle("-fx-underline: false; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-text-fill: #ffffff;");
         hyperlinkabc.setOnAction(evt -> primaryStage.setScene(scene2));
-        HBox log = new HBox(logIn, hyperlinkabc);
+        HBox l = new HBox(t, logIn, hyperlinkabc);
+        VBox log = new VBox(t, l);
+        l.setAlignment(Pos.CENTER);
         log.setAlignment(Pos.CENTER);
         return log;
     }
@@ -197,9 +201,9 @@ public class Login extends Application {
         Hyperlink hyperlinkabc = new Hyperlink("Sign up");
         hyperlinkabc.setStyle("-fx-underline: false; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-text-fill: #ffffff;");
         hyperlinkabc.setOnAction(evt -> primaryStage.setScene(scene1));
-        HBox sign = new HBox(signUp, hyperlinkabc);
-        sign.setAlignment(Pos.CENTER);
-        return sign;
+        HBox total = new HBox(signUp, hyperlinkabc);
+        total.setAlignment(Pos.CENTER);
+        return total;
     }
 
     private void handleLogin() {
@@ -253,6 +257,14 @@ public class Login extends Application {
         return head;
     }
 
+    private Node getRow(String labelText, TextField field, Text t) {
+        Label label = new Label(labelText);
+        label.setMinWidth(wLabel);
+        HBox row = new HBox(label, field, t);
+        row.setSpacing(10);
+        row.setAlignment(Pos.CENTER);
+        return row;
+    }
     private Node getRow(String labelText, TextField field) {
         Label label = new Label(labelText);
         label.setMinWidth(wLabel);
@@ -268,6 +280,16 @@ public class Login extends Application {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    private Text star() {
+        Text star = new Text("*");
+        star.setStyle("-fx-fill: red;");
+        return star;
+    }
+    private Text none() {
+        Text none = new Text(" ");
+        none.setStyle("-fx-fill: transparent;");
+        return none;
     }
 
     public static void main(String[] args) {
