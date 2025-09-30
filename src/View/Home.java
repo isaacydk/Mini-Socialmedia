@@ -81,6 +81,7 @@ public class Home {
         bubble.setPadding(new Insets(8));
         bubble.getStyleClass().add("border-one");
 
+        //adjusts when the window is resized
         bubble.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 messageText.wrappingWidthProperty()

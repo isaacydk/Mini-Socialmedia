@@ -65,12 +65,12 @@ public class Login extends Application {
 
         VBox total = new VBox(
             sHead("Welcome"),
-            getRow("First Name", tFirstName, star()),
-            getRow("Last Name", tLastName, none()),
-            getRow("Username", tUsername, star()),
-            getRow("Email", tEmail, star()),
-            getRow("Password", tPassword, star()),
-            getRow("Confirm Password", tCpassword, star()),
+            getRow("First Name", tFirstName, none()),
+            getRow("Last Name", tLastName, optional()),
+            getRow("Username", tUsername, none()),
+            getRow("Email", tEmail, none()),
+            getRow("Password", tPassword, none()),
+            getRow("Confirm Password", tCpassword, none()),
             getSignupButton(),
             getSwitchToLogin()
         );
@@ -92,16 +92,13 @@ public class Login extends Application {
     }
 
     private Node getSwitchToLogin() {
-        Label t = new Label("* - required field");
         Label logIn = new Label("Already have an account? ");
         Hyperlink hyperlinkabc = new Hyperlink("Log in");
         hyperlinkabc.setStyle("-fx-underline: false; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-text-fill: #ffffff;");
         hyperlinkabc.setOnAction(evt -> primaryStage.setScene(scene2));
-        HBox l = new HBox(t, logIn, hyperlinkabc);
-        VBox log = new VBox(t, l);
+        HBox l = new HBox(logIn, hyperlinkabc);
         l.setAlignment(Pos.CENTER);
-        log.setAlignment(Pos.CENTER);
-        return log;
+        return l;
     }
 
     // modify it to not sign in if the username, first name, email, and password is empty
@@ -281,14 +278,13 @@ public class Login extends Application {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    private Text star() {
-        Text star = new Text("*");
-        star.setStyle("-fx-fill: red;");
-        return star;
+    private Text optional(){
+        Text opt = new Text("optional");
+        opt.setStyle("-fx-fill: grey;");
+        return opt;
     }
     private Text none() {
-        Text none = new Text(" ");
-        none.setStyle("-fx-fill: transparent;");
+        Text none = new Text("            ");
         return none;
     }
 
